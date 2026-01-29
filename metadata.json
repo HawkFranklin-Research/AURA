@@ -1,0 +1,8 @@
+{
+  "name": "Aura",
+  "description": "Aura Personal Research Assistant by HawkFranklin Research. Features advanced chat, voice interaction, image analysis, and media generation.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}

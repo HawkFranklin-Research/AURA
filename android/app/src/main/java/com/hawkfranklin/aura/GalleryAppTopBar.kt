@@ -71,7 +71,7 @@ fun GalleryTopAppBar(
           val isAppTitle = title == stringResource(R.string.app_name)
           if (isAppTitle) {
             Icon(
-              painterResource(R.drawable.logo),
+              painterResource(R.drawable.logo_new_black),
               modifier = Modifier.size(20.dp),
               contentDescription = null,
               tint = Color.Unspecified,

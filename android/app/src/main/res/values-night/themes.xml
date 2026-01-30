@@ -18,7 +18,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
   <style name="Theme.Gallery.SplashScreen" parent="Theme.SplashScreen">
     <item name="windowSplashScreenBackground">#0A0F1A</item>
-    <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+    <item name="windowSplashScreenAnimatedIcon">@drawable/logo_new_black</item>
     <item name="postSplashScreenTheme">@style/Theme.Gallery</item>
   </style>
   <style name="Theme.Gallery.OssLicenses" parent="Theme.AppCompat">

@@ -17,6 +17,7 @@ android/app/build
 android/keystore
 android/keystore.properties
 *.keystore
+android-capacitor-old.tar.gz
 
 # Editor directories and files
 .vscode/*

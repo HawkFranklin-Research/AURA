@@ -1,11 +1,21 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
 // Helper to get client with current key
+const getApiKey = () => {
+  if (typeof window !== 'undefined') {
+      const storedKey = localStorage.getItem('hf_gemini_api_key');
+      if (storedKey) return storedKey;
+  }
+  const envKey = process.env.API_KEY !== 'PLACEHOLDER_API_KEY' ? process.env.API_KEY : undefined;
+  return envKey;
+};
+
 const getAiClient = () => {
-    // In a real scenario with strict key selection, we might check window.aistudio
-    // but strictly adhering to instructions, we use process.env.API_KEY mostly,
-    // and recreate for Veo if needed.
-    return new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const key = getApiKey();
+    if (!key) {
+        throw new Error("API Key is missing. Please go to Settings to configure it.");
+    }
+    return new GoogleGenAI({ apiKey: key });
 };
 
 export const generateTextResponse = async (
@@ -24,7 +34,7 @@ export const generateTextResponse = async (
   else if (image) modelName = 'gemini-3-pro-preview'; // Multimodal
 
   const config: any = {
-    systemInstruction: "You are Aura, a sophisticated personal research assistant developed by HawkFranklin Research. You are helpful, concise, and professional. You can analyze data, generate creative content, and assist with complex tasks.",
+    systemInstruction: "You are Aura (Abliterated Unfiltered RAW Artificial Intelligence), a sophisticated personal research assistant developed by HawkFranklin Research. You are helpful, concise, and professional. You can analyze data, generate creative content, and assist with complex tasks.",
   };
 
   if (useThinking) {
@@ -132,7 +142,10 @@ export const generateVideo = async (prompt: string, aspectRatio: '16:9' | '9:16'
     }
 
     // Must recreate client to pick up selected key if any
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY }); 
+    const key = getApiKey();
+    if (!key) throw new Error("API Key is missing.");
+
+    const ai = new GoogleGenAI({ apiKey: key }); 
 
     try {
         let operation = await ai.models.generateVideos({
@@ -155,7 +168,7 @@ export const generateVideo = async (prompt: string, aspectRatio: '16:9' | '9:16'
         if (!videoUri) throw new Error("Video generation failed to return URI");
 
         // Fetch the actual bytes
-        const res = await fetch(`${videoUri}&key=${process.env.API_KEY}`);
+        const res = await fetch(`${videoUri}&key=${key}`);
         const blob = await res.blob();
         return URL.createObjectURL(blob);
     } catch (e) {

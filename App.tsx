@@ -5,7 +5,8 @@ import { decodeAudioData, base64ToUint8Array } from './services/audioUtils';
 import { ChatMessageItem } from './components/ChatMessage';
 import { LiveSession } from './components/LiveSession';
 import { MediaStudio } from './components/MediaStudio';
-import { Send, Mic, Image as ImageIcon, Search, BrainCircuit, Menu, Plus, Volume2, VolumeX } from 'lucide-react';
+import { SettingsView } from './components/SettingsView';
+import { Send, Mic, Image as ImageIcon, Search, BrainCircuit, Menu, Plus, Volume2, VolumeX, Settings } from 'lucide-react';
 
 // Custom Type for Window AI Studio
 declare global {
@@ -43,6 +44,12 @@ export default function App() {
 
   // Load chats on mount
   useEffect(() => {
+    // Check for API Key
+    const hasKey = localStorage.getItem('hf_gemini_api_key');
+    if (!hasKey && process.env.API_KEY === 'PLACEHOLDER_API_KEY') {
+        setMode(AppMode.SETTINGS);
+    }
+
     const saved = localStorage.getItem('hf_chat_history');
     if (saved) {
       setMessages(JSON.parse(saved));
@@ -51,7 +58,7 @@ export default function App() {
         setMessages([{
             id: 'init',
             role: MessageRole.MODEL,
-            text: "Greetings. I am **Aura**, your personal research assistant by HawkFranklin. I can see, hear, and speak. How can I help you achieve your goals today?",
+            text: "Greetings. I am **Aura** (Abliterated Unfiltered RAW Artificial Intelligence). I can see, hear, and speak. How can I help you achieve your goals today?",
             timestamp: Date.now()
         }]);
     }
@@ -214,7 +221,7 @@ export default function App() {
                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-700 flex items-center justify-center font-bold text-slate-900 text-lg">A</div>
                <div>
                   <h1 className="font-serif font-bold text-yellow-500 leading-tight">Aura</h1>
-                  <p className="text-[10px] text-slate-400 tracking-wide uppercase">By HawkFranklin</p>
+                  <p className="text-[9px] text-slate-400 tracking-wide uppercase leading-tight">Abliterated Unfiltered<br/>RAW AI</p>
                </div>
             </div>
 
@@ -225,8 +232,11 @@ export default function App() {
                <button onClick={() => { setMode(AppMode.STUDIO); setShowSidebar(false); }} className={`w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 ${mode === AppMode.STUDIO ? 'bg-slate-800 text-yellow-500' : 'text-slate-400 hover:text-slate-200'}`}>
                   <ImageIcon size={18} /> Studio
                </button>
-               <button onClick={() => { setMode(AppMode.LIVE); setShowSidebar(false); }} className="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800">
+               <button onClick={() => { setMode(AppMode.LIVE); setShowSidebar(false); }} className={`w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 ${mode === AppMode.LIVE ? 'bg-slate-800 text-yellow-500' : 'text-slate-400 hover:text-slate-200'}`}>
                   <Mic size={18} /> Live Voice
+               </button>
+               <button onClick={() => { setMode(AppMode.SETTINGS); setShowSidebar(false); }} className={`w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 ${mode === AppMode.SETTINGS ? 'bg-slate-800 text-yellow-500' : 'text-slate-400 hover:text-slate-200'}`}>
+                  <Settings size={18} /> Settings
                </button>
             </nav>
             
@@ -247,6 +257,8 @@ export default function App() {
 
          {mode === AppMode.STUDIO ? (
             <MediaStudio />
+         ) : mode === AppMode.SETTINGS ? (
+            <SettingsView />
          ) : (
             <>
                {/* Chat Area */}

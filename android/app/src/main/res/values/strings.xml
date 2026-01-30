@@ -16,10 +16,10 @@
 
 <resources>
   <!-- TODO(jingjin): Add translation support when i18n is ready. -->
-  <string name="app_name" translatable="false">Google AI Edge Gallery</string>
-  <string name="app_name_first_part" translatable="false">Google AI</string>
-  <string name="app_name_second_part" translatable="false">Edge Gallery</string>
-  <string name="app_intro" translatable="false">Explore a world of amazing on-device models from</string>
+  <string name="app_name" translatable="false">AURA</string>
+  <string name="app_name_first_part" translatable="false">AURA</string>
+  <string name="app_name_second_part" translatable="false">UNFILTERED INTELLIGENCE</string>
+  <string name="app_intro" translatable="false">Private, on-device intelligence built for research.</string>
   <string name="best_overall" translatable="false">Best overall</string>
   <plurals name="model_list_number_of_models_available" translatable="false">
     <item quantity="one">%d model available</item>
@@ -28,7 +28,7 @@
   <string name="model_list_recommended_models_title" translatable="false">Recommended models</string>
   <string name="model_list_imported_models_title" translatable="false">Imported models</string>
   <string name="model_list_experimental_label" translatable="false">EXPERIMENTAL</string>
-  <string name="model_manager" translatable="false">Model Manager</string>
+  <string name="model_manager" translatable="false">Models</string>
   <string name="download" translatable="false">Download</string>
   <string name="downloaded_size" translatable="false">%1$s downloaded</string>
   <string name="cancel" translatable="false">Cancel</string>
@@ -56,7 +56,7 @@
   <string name="chat_generic_agent_name" translatable="false">Model</string>
   <string name="chat_generic_result_name" translatable="false">Result</string>
   <string name="learn_more" translatable="false">Learn more</string>
-  <string name="litert_community_label" translatable="false">LiteRT community</string>
+  <string name="litert_community_label" translatable="false">Model Library</string>
   <string name="loading_model_list" translatable="false">Loading model list...</string>
   <string name="memory_warning_title" translatable="false">Memory Warning</string>
   <string name="memory_warning_content" translatable="false">The model you\'ve selected may exceed your device\'s memory, which can cause the app to crash. For the best experience, we recommend trying a smaller model.</string>
@@ -71,7 +71,7 @@
   <string name="text_input_placeholder_text_classification" translatable="false">Type movie review to classify…</string>
   <string name="text_image_generation_text_field_placeholder" translatable="false">Type prompt…</string>
   <string name="text_input_placeholder_llm_chat" translatable="false">Type prompt…</string>
-  <string name="tos_dialog_title" translatable="false">Welcome to Google AI Edge Gallery</string>
+  <string name="tos_dialog_title" translatable="false">Welcome to AURA</string>
   <string name="tos_dialog_view_accept_button_label" translatable="false">Accept &amp; Continue</string>
   <string name="try_it" translatable="false">Try it</string>
   <string name="run_again" translatable="false">Run again</string>
@@ -92,7 +92,7 @@
   <string name="set_timer_message" translatable="false">Setting the timer for %1$d seconds.</string>
   <string name="add_calendar_event_message" translatable="false">Adding \"Team meeting (10AM-11AM)\" to your calendar.</string>
   <string name="take_picture_message" translatable="false">Opening the camera app.</string>
-  <string name="mobile_actions_title" translatable="false">Mobile Actions</string>
+  <string name="mobile_actions_title" translatable="false">Action Control</string>
   <string name="mobile_actions_description" translatable="false">Control your device with simple commands</string>
   <string name="mobile_actions_supported_actions" translatable="false">Supported sample actions:</string>
   <string name="mobile_actions_tab_model_response" translatable="false">Model response</string>
@@ -117,15 +117,15 @@
   <string name="prompt_template_label_open_wifi_settings" translatable="false">Open WIFI settings</string>
 
   <!-- Strings for MobileActionsChallengeDialog -->
-  <string name="mobile_actions_challenge_title" translatable="false">Mobile Actions Finetune Challenge</string>
-  <string name="mobile_actions_challenge_subtitle" translatable="false">Build it to play it!</string>
-  <string name="mobile_actions_challenge_description" translatable="false">This demo is locked. To unlock the Mobile Actions agent, you need to compile the model yourself using our open-source recipe.</string>
+  <string name="mobile_actions_challenge_title" translatable="false">Action Control Finetune Challenge</string>
+  <string name="mobile_actions_challenge_subtitle" translatable="false">Bring your own model</string>
+  <string name="mobile_actions_challenge_description" translatable="false">This demo is locked. To unlock the Action Control agent, you need to compile the model yourself using our open-source recipe.</string>
   <string name="mobile_actions_challenge_instructions_title" translatable="false">Instructions:</string>
-  <string name="mobile_actions_challenge_instruction_1" translatable="false">1. <![CDATA[<b>On your computer</b>]]>, open <![CDATA[<a href="https://ai.google.dev/gemma/docs/mobile-actions">this guide</a>]]></string>
-  <string name="mobile_actions_challenge_instruction_2" translatable="false">2. Follow the instructions to fine tune the model and convert it to .litertlm format.</string>
-  <string name="mobile_actions_challenge_instruction_3" translatable="false">3. Transfer the file to this phone.</string>
-  <string name="mobile_actions_challenge_instruction_4" translatable="false">4. Tap <![CDATA[<b>Load Model</b>]]> below to unlock the demo.</string>
-  <string name="mobile_actions_challenge_email_colab" translatable="false">Email guide to myself</string>
+  <string name="mobile_actions_challenge_instruction_1" translatable="false">1. Prepare a compatible .litertlm model file.</string>
+  <string name="mobile_actions_challenge_instruction_2" translatable="false">2. Transfer the file to this device.</string>
+  <string name="mobile_actions_challenge_instruction_3" translatable="false">3. Tap "Load Model" to continue.</string>
+  <string name="mobile_actions_challenge_instruction_4" translatable="false">4. Follow the on-screen steps to load the model.</string>
+  <string name="mobile_actions_challenge_email_colab" translatable="false">Email instructions</string>
   <string name="mobile_actions_challenge_load_model" translatable="false">Load Model</string>
 
   <!-- The following entries are for accessibility -->

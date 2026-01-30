@@ -6,7 +6,6 @@ export enum MessageRole {
 
 export enum AppMode {
   CHAT = 'chat',
-  LIVE = 'live',
   STUDIO = 'studio',
   SETTINGS = 'settings'
 }
@@ -18,7 +17,7 @@ export interface ChatMessage {
   image?: string; // base64
   timestamp: number;
   isThinking?: boolean;
-  groundingUrls?: Array<{title: string, uri: string}>;
+  groundingUrls?: Array<{ title: string, uri: string }>;
 }
 
 export interface ChatSession {
@@ -34,3 +33,6 @@ export interface MediaGenerationConfig {
   aspectRatio: string;
   style?: string;
 }
+
+
+

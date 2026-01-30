@@ -17,6 +17,7 @@
 package com.hawkfranklin.aura.ui.home
 
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import android.app.Activity
 import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
@@ -51,6 +52,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -105,6 +108,8 @@ fun SettingsDialog(
   val focusRequester = remember { FocusRequester() }
   val interactionSource = remember { MutableInteractionSource() }
   var showTos by remember { mutableStateOf(false) }
+  var showExitConfirm by remember { mutableStateOf(false) }
+  val context = LocalContext.current
 
   Dialog(onDismissRequest = onDismissed) {
     val focusManager = LocalFocusManager.current
@@ -142,7 +147,6 @@ fun SettingsDialog(
           modifier = Modifier.verticalScroll(rememberScrollState()).weight(1f, fill = false),
           verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-          val context = LocalContext.current
           // Theme switcher.
           Column(modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {}) {
             Text(
@@ -314,7 +318,16 @@ fun SettingsDialog(
               stringResource(R.string.settings_dialog_tos_title),
               style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
             )
-            OutlinedButton(onClick = { showTos = true }) { Text("View Terms of Services") }
+            OutlinedButton(onClick = { showTos = true }) { Text("View consent") }
+          }
+
+          // Exit
+          Column(modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {}) {
+            Text(
+              "Exit",
+              style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
+            )
+            OutlinedButton(onClick = { showExitConfirm = true }) { Text("Exit Aura") }
           }
         }
 
@@ -332,6 +345,27 @@ fun SettingsDialog(
 
   if (showTos) {
     TosDialog(onTosAccepted = { showTos = false }, viewingMode = true)
+  }
+
+  if (showExitConfirm) {
+    AlertDialog(
+      onDismissRequest = { showExitConfirm = false },
+      title = { Text("Exit Aura") },
+      text = { Text("Mischief Managed.") },
+      confirmButton = {
+        Button(
+          onClick = {
+            showExitConfirm = false
+            (context as? Activity)?.finish()
+          }
+        ) {
+          Text("Exit")
+        }
+      },
+      dismissButton = {
+        TextButton(onClick = { showExitConfirm = false }) { Text("Cancel") }
+      },
+    )
   }
 }
 

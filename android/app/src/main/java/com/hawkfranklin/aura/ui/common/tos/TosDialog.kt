@@ -16,14 +16,22 @@
 
 package com.hawkfranklin.aura.ui.common.tos
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,18 +46,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.hawkfranklin.aura.R
-import com.hawkfranklin.aura.ui.common.MarkdownText
 
 /** A composable for Terms of Service dialog, shown once when app is launched. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TosDialog(onTosAccepted: () -> Unit, viewingMode: Boolean = false) {
-  var viewFullTerms by remember { mutableStateOf(viewingMode) }
+  var step by remember { mutableStateOf(0) }
+  val pages =
+    listOf(
+      Pair(
+        "Research Consent",
+        "I solemnly swear that I am up to no good.\n\n" +
+          "AURA is an experimental on-device system. By continuing, you consent to research use " +
+          "and acknowledge outputs may be inaccurate or unsafe.",
+      ),
+      Pair(
+        "Local + Private",
+        "Your model runs on-device. No cloud logging unless you enable network features in Settings.",
+      ),
+    )
 
   Dialog(
     properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
@@ -69,28 +90,61 @@ fun TosDialog(onTosAccepted: () -> Unit, viewingMode: Boolean = false) {
             TextAutoSize.StepBased(minFontSize = 16.sp, maxFontSize = 24.sp, stepSize = 1.sp),
         )
 
-        Column(modifier = Modifier.verticalScroll(rememberScrollState()).weight(1f, fill = false)) {
-          // Short content.
-          MarkdownText(
-            "By using AURA, you agree to the terms of use. " +
-              "On-device models may produce inaccurate or unexpected outputs. " +
-              "Your data stays on-device unless you explicitly enable network features.",
-            smallFontSize = true,
-            textColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 16.dp),
-          )
+        AnimatedContent(
+          targetState = step,
+          transitionSpec = { fadeIn(tween(180)) togetherWith fadeOut(tween(180)) },
+          label = "OnboardingContent",
+        ) { pageIndex ->
+          val page = pages[pageIndex]
+          Column(modifier = Modifier.padding(top = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(
+              page.first,
+              style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+              color = MaterialTheme.colorScheme.onSurface,
+              textAlign = TextAlign.Start,
+            )
+            Text(
+              page.second,
+              style = MaterialTheme.typography.bodyMedium,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+          }
+        }
+
+        Row(
+          modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+          horizontalArrangement = Arrangement.Center,
+        ) {
+          pages.forEachIndexed { index, _ ->
+            val width = if (index == step) 24.dp else 8.dp
+            val color =
+              if (index == step) MaterialTheme.colorScheme.primary
+              else MaterialTheme.colorScheme.outline
+            androidx.compose.foundation.layout.Box(
+              modifier =
+                Modifier.padding(horizontal = 3.dp)
+                  .width(width)
+                  .height(6.dp)
+                  .background(color = color, shape = RoundedCornerShape(999.dp)),
+            )
+          }
         }
 
         // Accept button.
         Button(
-          onClick = onTosAccepted,
-          modifier = Modifier.padding(top = 28.dp, bottom = 24.dp).align(Alignment.End),
+          onClick = {
+            if (step < pages.lastIndex) {
+              step += 1
+            } else {
+              onTosAccepted()
+            }
+          },
+          modifier = Modifier.padding(top = 20.dp, bottom = 24.dp).align(Alignment.End),
         ) {
-          Text(
-            stringResource(
-              if (viewingMode) R.string.close else R.string.tos_dialog_view_accept_button_label
-            )
-          )
+          val label =
+            if (step < pages.lastIndex) "Next"
+            else stringResource(if (viewingMode) R.string.close else R.string.tos_dialog_view_accept_button_label)
+          Text(label)
         }
       }
     }

@@ -8,7 +8,8 @@ import { SettingsView } from './components/SettingsView';
 import { ConsentGate } from './components/ConsentGate';
 import { Onboarding } from './components/Onboarding';
 import { AboutUs } from './components/AboutUs';
-import { Send, Image as ImageIcon, Search, BrainCircuit, Menu, Plus, Volume2, VolumeX, Settings, Info } from 'lucide-react';
+import { LocalChat } from './components/LocalChat';
+import { Send, Image as ImageIcon, Search, BrainCircuit, Menu, Plus, Volume2, VolumeX, Settings, Info, Cpu } from 'lucide-react';
 import logoImg from './assets/logo.png';
 
 // Custom Type for Window AI Studio
@@ -219,6 +220,9 @@ export default function App() {
                   <button onClick={() => { setMode(AppMode.CHAT); setShowSidebar(false); }} className={`w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all ${mode === AppMode.CHAT ? 'bg-white/10 text-magical border border-magical/20 shadow-[0_0_10px_rgba(139,92,246,0.1)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
                      <Menu size={18} /> Chat Protocol
                   </button>
+                  <button onClick={() => { setMode(AppMode.LOCAL_CHAT); setShowSidebar(false); }} className={`w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all ${mode === AppMode.LOCAL_CHAT ? 'bg-white/10 text-cyan-glow border border-cyan-glow/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
+                     <Cpu size={18} /> Local Protocol
+                  </button>
                   <button onClick={() => { setMode(AppMode.STUDIO); setShowSidebar(false); }} className={`w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all ${mode === AppMode.STUDIO ? 'bg-white/10 text-cyan-glow border border-cyan-glow/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
                      <ImageIcon size={18} /> Media Studio
                   </button>
@@ -249,6 +253,8 @@ export default function App() {
 
             {mode === AppMode.STUDIO ? (
                <MediaStudio />
+            ) : mode === AppMode.LOCAL_CHAT ? (
+               <LocalChat />
             ) : mode === AppMode.SETTINGS ? (
                <SettingsView />
             ) : (

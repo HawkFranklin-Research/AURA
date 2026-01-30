@@ -7,7 +7,8 @@ export enum MessageRole {
 export enum AppMode {
   CHAT = 'chat',
   STUDIO = 'studio',
-  SETTINGS = 'settings'
+  SETTINGS = 'settings',
+  LOCAL_CHAT = 'local_chat'
 }
 
 export interface ChatMessage {

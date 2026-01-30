@@ -4,10 +4,14 @@ import { Save, Key, ExternalLink, ShieldCheck, Download, Cpu, GitBranch } from '
 export const SettingsView = () => {
   const [apiKey, setApiKey] = useState('');
   const [isSaved, setIsSaved] = useState(false);
+  const [modelUrl, setModelUrl] = useState('');
+  const [isModelUrlSaved, setIsModelUrlSaved] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('hf_gemini_api_key');
     if (stored) setApiKey(stored);
+    const storedModelUrl = localStorage.getItem('hf_local_model_url');
+    if (storedModelUrl) setModelUrl(storedModelUrl);
   }, []);
 
   const handleSave = () => {
@@ -21,6 +25,19 @@ export const SettingsView = () => {
   const handleClear = () => {
     localStorage.removeItem('hf_gemini_api_key');
     setApiKey('');
+  };
+
+  const handleModelUrlSave = () => {
+    if (modelUrl.trim()) {
+      localStorage.setItem('hf_local_model_url', modelUrl.trim());
+      setIsModelUrlSaved(true);
+      setTimeout(() => setIsModelUrlSaved(false), 2000);
+    }
+  };
+
+  const handleModelUrlClear = () => {
+    localStorage.removeItem('hf_local_model_url');
+    setModelUrl('');
   };
 
   return (
@@ -93,6 +110,35 @@ export const SettingsView = () => {
           <p className="text-sm text-slate-400">
             Download optimized models for offline inference. These run entirely on your device's NPU/GPU.
           </p>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-300">Model Download URL</label>
+            <input
+              type="text"
+              value={modelUrl}
+              onChange={(e) => setModelUrl(e.target.value)}
+              placeholder="https://.../model.bin or .litertlm"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-green-600 outline-none transition-all placeholder-slate-600 font-mono text-sm"
+            />
+            <p className="text-xs text-slate-500">
+              This pre-fills the Local Protocol download field in chat.
+            </p>
+            <div className="flex items-center gap-4 pt-1">
+              <button
+                onClick={handleModelUrlSave}
+                className={`flex items-center gap-2 px-5 py-2 rounded-lg font-bold transition-all ${isModelUrlSaved ? 'bg-green-600 text-white' : 'bg-green-700 text-white hover:bg-green-800'}`}
+              >
+                {isModelUrlSaved ? <ShieldCheck size={16} /> : <Save size={16} />}
+                {isModelUrlSaved ? 'Saved' : 'Save URL'}
+              </button>
+
+              {modelUrl && (
+                <button onClick={handleModelUrlClear} className="text-red-400 text-sm hover:text-red-300 px-3">
+                  Clear URL
+                </button>
+              )}
+            </div>
+          </div>
 
           <div className="border border-slate-800 rounded-xl p-4 bg-slate-950/50 flex items-center justify-between">
             <div>

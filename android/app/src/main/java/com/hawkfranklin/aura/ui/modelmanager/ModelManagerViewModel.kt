@@ -731,7 +731,7 @@ constructor(
         if (modelAllowlist == null) {
           // Load from github.
           val url =
-            "https://raw.githubusercontent.com/google-ai-edge/gallery/refs/heads/main/model_allowlists/${BuildConfig.VERSION_NAME.replace(".", "_")}.json"
+            "https://raw.githubusercontent.com/HawkFranklin-Research/AURA/native-rebuild/model_allowlists/${BuildConfig.VERSION_NAME.replace(".", "_")}.json"
           Log.d(TAG, "Loading model allowlist from internet. Url: $url")
           val data = getJsonResponse<ModelAllowlist>(url = url)
           modelAllowlist = data?.jsonObj

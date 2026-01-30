@@ -239,7 +239,10 @@ object LlmChatModelHelper {
       Message.of(contents),
       object : MessageCallback {
         override fun onMessage(message: Message) {
-          resultListener(message.toString(), false)
+          val text = message.contents.joinToString("") { 
+            if (it is Content.Text) it.text else "" 
+          }
+          resultListener(text, false)
         }
 
         override fun onDone() {

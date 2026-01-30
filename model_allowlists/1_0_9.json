@@ -15,10 +15,18 @@
         "topP": 0.95,
         "temperature": 1.0,
         "maxTokens": 4096,
-        "accelerators": "cpu,gpu"
+        "accelerators": "cpu"
       },
-      "taskTypes": ["llm_chat", "llm_prompt_lab", "llm_ask_image", "llm_ask_audio"],
-      "bestForTaskTypes": ["llm_ask_image", "llm_ask_audio"]
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab",
+        "llm_ask_image",
+        "llm_ask_audio"
+      ],
+      "bestForTaskTypes": [
+        "llm_ask_image",
+        "llm_ask_audio"
+      ]
     },
     {
       "name": "Gemma-3n-E4B-it",
@@ -35,9 +43,14 @@
         "topP": 0.95,
         "temperature": 1.0,
         "maxTokens": 4096,
-        "accelerators": "cpu,gpu"
+        "accelerators": "cpu"
       },
-      "taskTypes": ["llm_chat", "llm_prompt_lab", "llm_ask_image", "llm_ask_audio"]
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab",
+        "llm_ask_image",
+        "llm_ask_audio"
+      ]
     },
     {
       "name": "Gemma3-1B-IT",
@@ -52,10 +65,16 @@
         "topP": 0.95,
         "temperature": 1.0,
         "maxTokens": 1024,
-        "accelerators": "gpu,cpu"
+        "accelerators": "cpu"
       },
-      "taskTypes": ["llm_chat", "llm_prompt_lab"],
-      "bestForTaskTypes": ["llm_chat", "llm_prompt_lab"]
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab"
+      ],
+      "bestForTaskTypes": [
+        "llm_chat",
+        "llm_prompt_lab"
+      ]
     },
     {
       "name": "Qwen2.5-1.5B-Instruct",
@@ -70,9 +89,12 @@
         "topP": 0.8,
         "temperature": 0.7,
         "maxTokens": 4096,
-        "accelerators": "gpu,cpu"
+        "accelerators": "cpu"
       },
-      "taskTypes": ["llm_chat", "llm_prompt_lab"]
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab"
+      ]
     },
     {
       "name": "Phi-4-mini-instruct",
@@ -87,9 +109,12 @@
         "topP": 0.95,
         "temperature": 1.0,
         "maxTokens": 4096,
-        "accelerators": "gpu,cpu"
+        "accelerators": "cpu"
       },
-      "taskTypes": ["llm_chat", "llm_prompt_lab"]
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab"
+      ]
     },
     {
       "name": "DeepSeek-R1-Distill-Qwen-1.5B",
@@ -104,9 +129,33 @@
         "topP": 0.95,
         "temperature": 1.0,
         "maxTokens": 4096,
-        "accelerators": "gpu,cpu"
+        "accelerators": "cpu"
       },
-      "taskTypes": ["llm_chat", "llm_prompt_lab"]
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab"
+      ]
+    },
+    {
+      "name": "Gemma3-270M-IT",
+      "modelId": "litert-community/gemma-3-270m-it",
+      "modelFile": "gemma3-270m-it-q8.litertlm",
+      "description": "A LiteRT-LM variant of [google/gemma-3-270m-it](https://huggingface.co/google/gemma-3-270m-it) with Q8 quantization for on-device text generation.",
+      "sizeInBytes": 304000000,
+      "minDeviceMemoryInGb": 4,
+      "commitHash": "main",
+      "url": "https://huggingface.co/litert-community/gemma-3-270m-it/resolve/main/gemma3-270m-it-q8.litertlm?download=true",
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 1.0,
+        "maxTokens": 1024,
+        "accelerators": "cpu"
+      },
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab"
+      ]
     },
     {
       "name": "TinyGarden-270M",

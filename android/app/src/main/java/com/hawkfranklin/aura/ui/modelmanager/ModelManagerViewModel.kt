@@ -724,6 +724,11 @@ constructor(
         Log.d(TAG, "Loading test model allowlist.")
         modelAllowlist = readModelAllowlistFromDisk(fileName = MODEL_ALLOWLIST_TEST_FILENAME)
 
+        if (modelAllowlist == null) {
+          Log.d(TAG, "Loading bundled model allowlist from assets.")
+          modelAllowlist = readModelAllowlistFromAssets(fileName = MODEL_ALLOWLIST_FILENAME)
+        }
+
         // // Local test only.
         // val gson = Gson()
         // modelAllowlist = gson.fromJson(TEST_MODEL_ALLOW_LIST, ModelAllowlist::class.java)
@@ -849,6 +854,21 @@ constructor(
     }
 
     return null
+  }
+
+  private fun readModelAllowlistFromAssets(
+    fileName: String = MODEL_ALLOWLIST_FILENAME
+  ): ModelAllowlist? {
+    try {
+      Log.d(TAG, "Reading model allowlist from assets: $fileName")
+      val content =
+        context.assets.open(fileName).bufferedReader().use { it.readText() }
+      val gson = Gson()
+      return gson.fromJson(content, ModelAllowlist::class.java)
+    } catch (e: Exception) {
+      Log.e(TAG, "failed to read model allowlist from assets", e)
+      return null
+    }
   }
 
   private fun isModelPartiallyDownloaded(model: Model): Boolean {

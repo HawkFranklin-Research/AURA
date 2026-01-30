@@ -93,6 +93,7 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
@@ -481,9 +482,9 @@ fun HomeScreen(
 
 @Composable
 private fun AppTitle(enableAnimation: Boolean) {
-  val titleText = stringResource(R.string.app_name)
+  val titleText = "Abliterated Uncensored\nRAW Artificial Intelligence"
   val screenWidthInDp = LocalConfiguration.current.screenWidthDp.dp
-  val fontSize = with(LocalDensity.current) { (screenWidthInDp.toPx() * 0.12f).toSp() }
+  val fontSize = with(LocalDensity.current) { (screenWidthInDp.toPx() * 0.08f).toSp() }
   val titleStyle = homePageTitleStyle.copy(fontSize = fontSize, lineHeight = fontSize)
 
   Box(modifier = Modifier.clearAndSetSemantics {}) {
@@ -491,7 +492,8 @@ private fun AppTitle(enableAnimation: Boolean) {
       text = titleText,
       style =
         titleStyle.copy(
-          brush = linearGradient(colors = MaterialTheme.customColors.appTitleGradientColors)
+          brush = linearGradient(colors = MaterialTheme.customColors.appTitleGradientColors),
+          textAlign = TextAlign.Center,
         ),
       animationDelay = if (enableAnimation) ANIMATION_INIT_DELAY else 0,
       animationDurationMs = if (enableAnimation) TITLE_SECOND_LINE_ANIMATION_DURATION2 else 0,

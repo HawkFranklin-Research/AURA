@@ -1,0 +1,40 @@
+code is not the problem.
+
+I compared our LlmChatViewModel + ChatViewModel to Google’s line‑by‑line. They are identical
+(only package names differ). So the “empty text blob” is not caused by those files. The only
+remaining difference is the 270m model itself or the downloaded file.
+
+Why 270m can produce an empty bubble even with Google’s code
+
+- The app does not validate the downloaded file. If HuggingFace returns HTML/redirect
+  content (or a partial file), it still saves it and tries to load it.
+- 270m uses commitHash: "main" and a fixed sizeInBytes. If the file changes or a resume
+  happens, you can end up with a corrupted file.
+- Result: the model loads but returns empty tokens, which shows as an empty message bubble.
+
+The 1B model working proves the pipeline is fine.
+
+What I recommend checking (no code change)
+
+1. On device, check the actual file size:
+    - Path pattern:
+      Android/data/com.hawkfranklin.aura/files/Gemma3_270M_IT/main/gemma3-270m-it-
+      q8.litertlm
+    - If it’s not ~304 MB, the file is wrong/corrupt.
+2. Delete that file and re‑download (with an HF token if needed).
+
+What will actually fix it (you choose)
+
+1. Disable or remove the 270m entry (so only working models show).
+2. Use a pinned commit hash from HuggingFace (avoid "main").
+3. If you want 270m specifically, I can update the allowlist with the exact commit hash and
+   size you choose.
+
+If you want me to fix it now, tell me which option you want:
+
+1. Disable 270m
+2. Pin to a specific commit (send the commit hash)
+3. Keep 270m but replace with a different file from that repo (tell me which file)
+
+Also: the title line change to “Abliterated Uncensored / RAW Artificial Intelligence” is
+already in the code.

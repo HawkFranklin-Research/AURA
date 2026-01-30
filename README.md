@@ -1,37 +1,32 @@
-# Aura
-**Abliterated Unfiltered RAW Artificial Intelligence**
+# AURA
+**Abliterated Uncensored RAW Artificial Intelligence**
 
-Aura is a native Android app based on Google AI Edge Gallery (Kotlin + Jetpack Compose). It runs on-device models via LiteRT (Google AI Edge) and supports local model download and offline inference.
+AURA is a native Android app for on‑device AI. It runs LiteRT‑LM models locally, supports offline use, and is designed for research‑grade experimentation with fewer restrictions than typical consumer assistants.
 
-## Highlights
-- **On‑device inference:** No cloud API keys required for local models.
-- **Model manager:** Download and manage LiteRT models.
-- **Chat + tools:** Multi‑turn chat and demo tasks (can be trimmed later).
-- **Offline‑ready:** Runs without network once models are downloaded.
+## Why AURA
+AURA is meant for serious, privacy‑first experimentation where cloud AI isn’t practical or desired. Example use cases:
+- **Red‑team prompt testing** to see how models behave under edge or adversarial inputs.
+- **Offline field work** where network access is limited or risky.
+- **Sensitive data exploration** (notes, transcripts, logs) that you don’t want to upload.
+- **Research & evaluation** of model behavior across different on‑device sizes and quantizations.
+- **Creative brainstorming** when you want less constrained generation.
 
-## Requirements
+> Note: AURA is not fully uncensored today. The intent is to allow **mid‑way** constraints now, and expand options later.
+
+## What it does
+- **On‑device inference** (LiteRT‑LM / Google AI Edge).
+- **Model hub + downloads** for local models.
+- **Chat, Ask Image, Prompt Lab** as core tasks.
+- **Offline‑ready** once models are downloaded.
+
+## Privacy & Responsibility
+AURA keeps inference on device by default. You are responsible for what you run and the outputs you generate.
+
+## Status
 - **Android 12+** (minSdk 31)
-- **Android Studio** (or Gradle CLI)
-- **JDK 11**
+- **Models download from Hugging Face** (may require a token for gated models)
 
-## Configure Hugging Face OAuth (required for model downloads)
-Create a Hugging Face OAuth app and set these values:
-
-1) `android/app/src/main/java/com/google/ai/edge/gallery/common/ProjectConfig.kt`
-- `clientId`
-- `redirectUri`
-
-2) `android/app/build.gradle.kts`
-- `manifestPlaceholders["appAuthRedirectScheme"]`
-
-These must match the redirect URI you configured in Hugging Face.
-
-## Build (Android Studio)
-- Open the `android/` folder in Android Studio.
-- Sync Gradle.
-- Build → Build APK(s).
-
-## Build (CLI)
+## Developer build (short)
 ```bash
 cd android
 ./gradlew assembleDebug
@@ -39,6 +34,6 @@ cd android
 Output:
 - `android/app/build/outputs/apk/debug/app-debug.apk`
 
-## Notes
-- The current Android app in `android/` is the Google AI Edge Gallery base. You can trim demos and re‑skin later.
-- The previous Capacitor Android project was archived to `android-capacitor-old.tar.gz`.
+## Repo notes
+- The app is based on Google AI Edge Gallery and has been trimmed and re‑branded for AURA.
+- The old Capacitor build is archived as `android-capacitor-old.tar.gz`.

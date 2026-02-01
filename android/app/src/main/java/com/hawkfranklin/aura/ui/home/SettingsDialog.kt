@@ -77,6 +77,7 @@ import androidx.compose.ui.window.Dialog
 import com.hawkfranklin.aura.BuildConfig
 import com.hawkfranklin.aura.R
 import com.hawkfranklin.aura.proto.Theme
+import com.hawkfranklin.aura.ui.common.ClickableLink
 import com.hawkfranklin.aura.ui.common.tos.TosDialog
 import com.hawkfranklin.aura.ui.modelmanager.ModelManagerViewModel
 import com.hawkfranklin.aura.ui.theme.ThemeSettings
@@ -170,6 +171,30 @@ fun SettingsDialog(
               "Developed by HawkFranklin Research.",
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+          }
+
+          // Privacy policy.
+          Column(
+            modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {},
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+          ) {
+            Text(
+              "Privacy policy",
+              style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
+            )
+            Text(
+              "AURA does not collect or transmit your prompts, images, audio, or outputs. All inference runs on-device and stays private.",
+              style = MaterialTheme.typography.bodySmall,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            ClickableLink(
+              url = "https://hawkfranklin.in/products/aura-privacy.html",
+              linkText = "View privacy policy",
+            )
+            ClickableLink(
+              url = "https://hawkfranklin.in/products/aura2.html",
+              linkText = "AURA product page",
             )
           }
 

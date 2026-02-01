@@ -482,7 +482,7 @@ fun HomeScreen(
 
 @Composable
 private fun AppTitle(enableAnimation: Boolean) {
-  val titleText = "Abliterated Uncensored\nRAW Artificial Intelligence"
+  val titleText = "AURA\nLocal AI Research Lab"
   val screenWidthInDp = LocalConfiguration.current.screenWidthDp.dp
   val fontSize = with(LocalDensity.current) { (screenWidthInDp.toPx() * 0.08f).toSp() }
   val titleStyle = homePageTitleStyle.copy(fontSize = fontSize, lineHeight = fontSize)

@@ -1,0 +1,53 @@
+===================================================================
+GOOGLE PLAY STORE LISTING - HAWKFRANKLIN RESEARCH
+App Name: AURA - Local AI Research Lab
+===================================================================
+
+[APP TITLE] (30 chars max)
+AURA: Private Local AI
+
+[SHORT DESCRIPTION] (80 chars max)
+Run open-source AI models locally. Private, offline, and ad-free.
+
+[FULL DESCRIPTION] (4000 chars max)
+AURA (Android Utility for Runtime AI) is a professional-grade environment for running open-source Small Language Models (SLMs) locally on your Android device.
+
+Designed by HawkFranklin Research, AURA provides a secure sandbox for researchers, developers, and enthusiasts to experiment with on-device AI without relying on cloud servers.
+
+🚀 KEY FEATURES
+
+• Pure Local Intelligence: Powered by models like Gemma 3, Qwen 2.5, DeepSeek R1 Distill, and Phi-4 Mini.
+• Privacy First: All inference happens directly on your device. Your prompts and data never leave your phone.
+• Offline Capable: Once models are downloaded, no internet connection is required for chat or analysis.
+• Research Optimized: Built for prompt engineering, latency testing, and on-device evaluations.
+• Completely Ad-Free: A pure tool for science and productivity. No distractions, no tracking.
+• Open Source Transparency: Inspect the code, verify privacy claims, and contribute improvements.
+
+⚠️ SYSTEM REQUIREMENTS
+AURA runs high-performance AI models natively using hardware acceleration.
+• RAM: 8GB or higher is strongly recommended. (Devices with 4GB-6GB may experience crashes or slow tokens/sec).
+• Processor: Modern Snapdragon 8 Gen 1+ / Tensor G2 or newer recommended for optimal speed.
+
+🧪 COMING SOON (ROADMAP)
+We are actively developing advanced features for the next release:
+• Chat with PDF & Documents (RAG)
+• Real-time Multi-lingual Translation
+• Voice-to-Action agents
+• Hovering assistant icon (optional overlay)
+
+OPEN SOURCE INITIATIVE
+AURA is proudly open-source. We believe in democratizing access to powerful local AI. Inspect the code, contribute, or build your own research tools.
+
+Note: This app is intended for research and internal testing purposes.
+
+[GRAPHIC ASSETS CHECKLIST]
+- App Icon: 512x512 png (32-bit color)
+- Feature Graphic: 1024x500 jpg or png (No alpha)
+- Screenshots: 16:9 aspect ratio recommended (Minimum 2)
+
+[PRIVACY POLICY URL]
+https://hawkfranklin.com/privacy-policy-aura (You must create this page, even if it just says "We collect nothing.")
+
+[DATA SAFETY DECLARATION ANSWERS]
+1. Does your app collect or share any user data? -> NO.
+   (Even though you download models, you do not collect user data sent to a server).

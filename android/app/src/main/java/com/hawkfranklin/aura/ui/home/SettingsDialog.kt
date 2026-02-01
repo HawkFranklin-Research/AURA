@@ -148,6 +148,31 @@ fun SettingsDialog(
           modifier = Modifier.verticalScroll(rememberScrollState()).weight(1f, fill = false),
           verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+          // About.
+          Column(
+            modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {},
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+          ) {
+            Text(
+              "What is AURA?",
+              style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
+            )
+            Text(
+              "Android Utility for Runtime AI.",
+              style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
+              "AURA is a private, on-device AI lab for research and internal use. It runs open-source models locally, works offline after download, and stays ad-free.",
+              style = MaterialTheme.typography.bodySmall,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+              "Developed by HawkFranklin Research.",
+              style = MaterialTheme.typography.bodySmall,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+          }
+
           // Theme switcher.
           Column(modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {}) {
             Text(
@@ -319,7 +344,7 @@ fun SettingsDialog(
               stringResource(R.string.settings_dialog_tos_title),
               style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
             )
-            OutlinedButton(onClick = { showTos = true }) { Text("View consent") }
+            OutlinedButton(onClick = { showTos = true }) { Text("View notice") }
           }
 
           // Exit

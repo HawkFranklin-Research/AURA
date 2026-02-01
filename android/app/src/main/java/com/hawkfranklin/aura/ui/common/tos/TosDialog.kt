@@ -61,14 +61,15 @@ fun TosDialog(onTosAccepted: () -> Unit, viewingMode: Boolean = false) {
   val pages =
     listOf(
       Pair(
-        "Research Consent",
-        "I solemnly swear that I am up to no good.\n\n" +
-          "AURA is an experimental on-device system. By continuing, you consent to research use " +
-          "and acknowledge outputs may be inaccurate or unsafe.",
+        "Research Notice",
+        "AURA is a private, on-device AI tool intended for research and internal use. " +
+          "By continuing, you acknowledge outputs may be inaccurate or unsafe and you are " +
+          "responsible for how you use them.",
       ),
       Pair(
-        "Local + Private",
-        "Your model runs on-device. No cloud logging unless you enable network features in Settings.",
+        "Local + Offline",
+        "Models run on your device. Once downloaded, no internet connection is required " +
+          "for inference, and the app remains ad-free.",
       ),
     )
 

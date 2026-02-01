@@ -18,8 +18,8 @@
   <!-- TODO(jingjin): Add translation support when i18n is ready. -->
   <string name="app_name" translatable="false">AURA</string>
   <string name="app_name_first_part" translatable="false">AURA</string>
-  <string name="app_name_second_part" translatable="false">UNFILTERED INTELLIGENCE</string>
-  <string name="app_intro" translatable="false">Private, on-device intelligence built for research.</string>
+  <string name="app_name_second_part" translatable="false">PRIVATE LOCAL AI</string>
+  <string name="app_intro" translatable="false">Private, on-device AI optimized for mobile research.</string>
   <string name="best_overall" translatable="false">Best overall</string>
   <plurals name="model_list_number_of_models_available" translatable="false">
     <item quantity="one">%d model available</item>
@@ -67,7 +67,7 @@
   <string name="reset_note" translatable="false">Tapping \"Reset\" will reset LiteRT-LM engine only. The game progress won\'t be affected.</string>
   <string name="resetting_engine" translatable="false">Resetting engine...</string>
   <string name="reinitializing_description" translatable="false">The game progress won\'t be affected</string>
-  <string name="settings_dialog_tos_title" translatable="false">Research consent</string>
+  <string name="settings_dialog_tos_title" translatable="false">Research notice</string>
   <string name="text_input_placeholder_text_classification" translatable="false">Type movie review to classify…</string>
   <string name="text_image_generation_text_field_placeholder" translatable="false">Type prompt…</string>
   <string name="text_input_placeholder_llm_chat" translatable="false">Type prompt…</string>

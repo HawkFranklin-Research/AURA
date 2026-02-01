@@ -84,8 +84,8 @@ class DefaultDataStoreRepository(
     return runBlocking {
       val settings = dataStore.data.first()
       val curTheme = settings.theme
-      // Use "auto" as the default theme.
-      if (curTheme == Theme.THEME_UNSPECIFIED) Theme.THEME_AUTO else curTheme
+      // Use "Aura" as the default theme.
+      if (curTheme == Theme.THEME_UNSPECIFIED) Theme.THEME_AURA else curTheme
     }
   }
 

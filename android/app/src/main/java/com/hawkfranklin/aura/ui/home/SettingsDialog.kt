@@ -87,7 +87,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.min
 
-private val THEME_OPTIONS = listOf(Theme.THEME_AUTO, Theme.THEME_LIGHT, Theme.THEME_DARK)
+private val THEME_OPTIONS =
+  listOf(Theme.THEME_AUTO, Theme.THEME_LIGHT, Theme.THEME_DARK, Theme.THEME_AURA)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -374,6 +375,7 @@ private fun themeLabel(theme: Theme): String {
     Theme.THEME_AUTO -> "Auto"
     Theme.THEME_LIGHT -> "Light"
     Theme.THEME_DARK -> "Dark"
+    Theme.THEME_AURA -> "Aura"
     else -> "Unknown"
   }
 }

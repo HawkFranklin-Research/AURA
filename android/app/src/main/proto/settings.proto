@@ -31,6 +31,9 @@ enum Theme {
 
   // Use the system them setting on user's phone.
   THEME_AUTO = 3;
+
+  // Aura palette theme (purple/void).
+  THEME_AURA = 4;
 }
 
 message AccessTokenData {

@@ -110,6 +110,45 @@ private val darkScheme =
     surfaceContainerHighest = surfaceContainerHighestDark,
   )
 
+private val auraScheme =
+  darkColorScheme(
+    primary = primaryAura,
+    onPrimary = onPrimaryAura,
+    primaryContainer = primaryContainerAura,
+    onPrimaryContainer = onPrimaryContainerAura,
+    secondary = secondaryAura,
+    onSecondary = onSecondaryAura,
+    secondaryContainer = secondaryContainerAura,
+    onSecondaryContainer = onSecondaryContainerAura,
+    tertiary = tertiaryAura,
+    onTertiary = onTertiaryAura,
+    tertiaryContainer = tertiaryContainerAura,
+    onTertiaryContainer = onTertiaryContainerAura,
+    error = errorAura,
+    onError = onErrorAura,
+    errorContainer = errorContainerAura,
+    onErrorContainer = onErrorContainerAura,
+    background = backgroundAura,
+    onBackground = onBackgroundAura,
+    surface = surfaceAura,
+    onSurface = onSurfaceAura,
+    surfaceVariant = surfaceVariantAura,
+    onSurfaceVariant = onSurfaceVariantAura,
+    outline = outlineAura,
+    outlineVariant = outlineVariantAura,
+    scrim = scrimAura,
+    inverseSurface = inverseSurfaceAura,
+    inverseOnSurface = inverseOnSurfaceAura,
+    inversePrimary = inversePrimaryAura,
+    surfaceDim = surfaceDimAura,
+    surfaceBright = surfaceBrightAura,
+    surfaceContainerLowest = surfaceContainerLowestAura,
+    surfaceContainerLow = surfaceContainerLowAura,
+    surfaceContainer = surfaceContainerAura,
+    surfaceContainerHigh = surfaceContainerHighAura,
+    surfaceContainerHighest = surfaceContainerHighestAura,
+  )
+
 @Immutable
 data class CustomColors(
   val appTitleGradientColors: List<Color> = listOf(),
@@ -219,6 +258,48 @@ val darkCustomColors =
     errorTextColor = Color(0xFFFCA5A5),
   )
 
+val auraCustomColors =
+  CustomColors(
+    appTitleGradientColors =
+      listOf(Color(0xFF818CF8), Color(0xFFC084FC), Color(0xFFF8FAFC)),
+    tabHeaderBgColor = Color(0xFF0F172A),
+    taskCardBgColor = surfaceContainerHighAura,
+    taskBgColors =
+      listOf(
+        Color(0xFF0C1020),
+        Color(0xFF101322),
+        Color(0xFF12152A),
+        Color(0xFF171331),
+      ),
+    taskBgGradientColors =
+      listOf(
+        listOf(Color(0xFF6366F1), Color(0xFF4338CA)),
+        listOf(Color(0xFFA855F7), Color(0xFF7C3AED)),
+        listOf(Color(0xFF818CF8), Color(0xFF6366F1)),
+        listOf(Color(0xFFC084FC), Color(0xFFA855F7)),
+      ),
+    taskIconColors =
+      listOf(
+        Color(0xFF818CF8),
+        Color(0xFFC084FC),
+        Color(0xFF6366F1),
+        Color(0xFFA855F7),
+      ),
+    taskIconShapeBgColor = Color(0xFF1E293B),
+    homeBottomGradient = listOf(Color(0x00020617), Color(0x336366F1)),
+    agentBubbleBgColor = Color(0xFF0F172A),
+    userBubbleBgColor = Color(0xFF1E1B4B),
+    linkColor = Color(0xFFA5B4FC),
+    successColor = Color(0xFFA1CE83),
+    recordButtonBgColor = Color(0xFF818CF8),
+    waveFormBgColor = Color(0xFF94A3B8),
+    modelInfoIconColor = Color(0xFF94A3B8),
+    warningContainerColor = Color(0xFF2A1B3D),
+    warningTextColor = Color(0xFFFBBF24),
+    errorContainerColor = Color(0xFF3B0A1E),
+    errorTextColor = Color(0xFFFCA5A5),
+  )
+
 val MaterialTheme.customColors: CustomColors
   @Composable @ReadOnlyComposable get() = LocalCustomColors.current
 
@@ -243,19 +324,31 @@ fun StatusBarColorController(useDarkTheme: Boolean) {
 @Composable
 fun GalleryTheme(content: @Composable () -> Unit) {
   val themeOverride = ThemeSettings.themeOverride
+  val useAuraTheme = themeOverride.value == Theme.THEME_AURA
   val darkTheme: Boolean =
-    (isSystemInDarkTheme() || themeOverride.value == Theme.THEME_DARK) &&
-      themeOverride.value != Theme.THEME_LIGHT
+    when (themeOverride.value) {
+      Theme.THEME_LIGHT -> false
+      Theme.THEME_DARK -> true
+      Theme.THEME_AURA -> true
+      Theme.THEME_AUTO -> isSystemInDarkTheme()
+      else -> isSystemInDarkTheme()
+    }
 
   StatusBarColorController(useDarkTheme = darkTheme)
 
   val colorScheme =
     when {
+      useAuraTheme -> auraScheme
       darkTheme -> darkScheme
       else -> lightScheme
     }
 
-  val customColorsPalette = if (darkTheme) darkCustomColors else lightCustomColors
+  val customColorsPalette =
+    when {
+      useAuraTheme -> auraCustomColors
+      darkTheme -> darkCustomColors
+      else -> lightCustomColors
+    }
 
   CompositionLocalProvider(LocalCustomColors provides customColorsPalette) {
     MaterialTheme(colorScheme = colorScheme, typography = AppTypography, content = content)

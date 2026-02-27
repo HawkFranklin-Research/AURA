@@ -163,12 +163,12 @@ fun SettingsDialog(
               style = MaterialTheme.typography.bodyMedium,
             )
             Text(
-              "AURA is a private, on-device AI lab for research and internal use. It runs open-source models locally, works offline after download, and stays ad-free.",
+              "AURA is a private, on-device AI app for local research and experimentation. It runs open-source models directly on your phone, works offline after download, and stays ad-free.",
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-              "Developed by HawkFranklin Research.",
+              "Built by HawkFranklin Research.",
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

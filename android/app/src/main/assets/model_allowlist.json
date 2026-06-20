@@ -53,6 +53,32 @@
         "llm_ask_image",
         "llm_ask_audio"
       ]
+    },
+    {
+      "name": "Gemma 4 E2B",
+      "modelId": "HawkFranklin-Research/AURA-models",
+      "modelFile": "aura-gemma-4-e2b-it.litertlm",
+      "description": "A LiteRT-LM variant of [Gemma 4 E2B IT](https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm), optimized for on-device text generation.",
+      "sizeInBytes": 2588147712,
+      "estimatedPeakMemoryInBytes": 1817370624,
+      "minDeviceMemoryInGb": 8,
+      "commitHash": "main",
+      "url": "https://huggingface.co/HawkFranklin-Research/AURA-models/resolve/main/aura-gemma-4-e2b-it.litertlm?download=true",
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 1.0,
+        "maxTokens": 4096,
+        "accelerators": "cpu,gpu"
+      },
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab"
+      ],
+      "bestForTaskTypes": [
+        "llm_chat",
+        "llm_prompt_lab"
+      ]
     }
   ]
 }

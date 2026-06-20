@@ -40,11 +40,11 @@ class LlmSingleTurnTask @Inject constructor() : CustomTask {
   override val task: Task =
     Task(
       id = BuiltInTaskId.LLM_PROMPT_LAB,
-      label = "Prompt Lab",
+      label = "Labs",
       category = Category.LLM,
       icon = Icons.Outlined.AutoFixHigh,
       models = mutableListOf(),
-      description = "Single-turn prompts with on-device models",
+      description = "Test prompts & settings",
       textInputPlaceHolderRes = R.string.text_input_placeholder_llm_chat,
     )
 

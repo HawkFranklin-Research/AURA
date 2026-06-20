@@ -20,5 +20,5 @@ import androidx.compose.runtime.mutableStateOf
 import com.hawkfranklin.aura.proto.Theme
 
 object ThemeSettings {
-  val themeOverride = mutableStateOf<Theme>(Theme.THEME_AURA)
+  val themeOverride = mutableStateOf<Theme>(Theme.THEME_LIGHT)
 }

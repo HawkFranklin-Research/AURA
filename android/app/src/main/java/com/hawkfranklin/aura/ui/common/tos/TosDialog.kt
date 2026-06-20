@@ -61,15 +61,12 @@ fun TosDialog(onTosAccepted: () -> Unit, viewingMode: Boolean = false) {
   val pages =
     listOf(
       Pair(
-        "Research Notice",
-        "AURA is a private, on-device AI tool intended for research and internal use. " +
-          "By continuing, you acknowledge outputs may be inaccurate or unsafe and you are " +
-          "responsible for how you use them.",
+        stringResource(R.string.tos_dialog_page_1_title),
+        stringResource(R.string.tos_dialog_page_1_body),
       ),
       Pair(
-        "Local + Offline",
-        "Models run on your device. Once downloaded, no internet connection is required " +
-          "for inference, and the app remains ad-free.",
+        stringResource(R.string.tos_dialog_page_2_title),
+        stringResource(R.string.tos_dialog_page_2_body),
       ),
     )
 
@@ -143,8 +140,11 @@ fun TosDialog(onTosAccepted: () -> Unit, viewingMode: Boolean = false) {
           modifier = Modifier.padding(top = 20.dp, bottom = 24.dp).align(Alignment.End),
         ) {
           val label =
-            if (step < pages.lastIndex) "Next"
-            else stringResource(if (viewingMode) R.string.close else R.string.tos_dialog_view_accept_button_label)
+            if (step < pages.lastIndex) stringResource(R.string.tos_dialog_next_button_label)
+            else
+              stringResource(
+                if (viewingMode) R.string.close else R.string.tos_dialog_view_accept_button_label
+              )
           Text(label)
         }
       }

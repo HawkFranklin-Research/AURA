@@ -116,6 +116,20 @@ fun ModelNameAndStatus(
           ),
       )
 
+      if (!model.imported) {
+        val descriptor = when {
+          model.sizeInBytes <= 600 * 1024 * 1024L -> "Fast & light. Great for most phones."
+          model.sizeInBytes <= 1500 * 1024 * 1024L -> "Balanced speed & quality. Recommended."
+          else -> "Highly capable. Runs best on high-end phones."
+        }
+        Text(
+          text = descriptor,
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          modifier = Modifier.padding(top = 2.dp)
+        )
+      }
+
       // Status icon + size + download progress details.
       Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 4.dp)) {
         // Status icon.

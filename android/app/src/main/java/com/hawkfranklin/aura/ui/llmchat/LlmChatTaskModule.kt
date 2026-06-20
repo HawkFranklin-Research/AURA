@@ -47,7 +47,7 @@ class LlmChatTask @Inject constructor() : CustomTask {
       category = Category.LLM,
       icon = Icons.Outlined.ChatBubbleOutline,
       models = mutableListOf(),
-      description = "Chat with on-device models",
+      description = "Talk, ask, draft, summarize",
       textInputPlaceHolderRes = R.string.text_input_placeholder_llm_chat,
     )
 
@@ -99,11 +99,11 @@ class LlmAskImageTask @Inject constructor() : CustomTask {
   override val task: Task =
     Task(
       id = BuiltInTaskId.LLM_ASK_IMAGE,
-      label = "Ask Image",
+      label = "Look",
       category = Category.LLM,
       icon = Icons.Outlined.ImageSearch,
       models = mutableListOf(),
-      description = "Ask questions about images with on-device models",
+      description = "Ask about any photo",
       textInputPlaceHolderRes = R.string.text_input_placeholder_llm_chat,
     )
 

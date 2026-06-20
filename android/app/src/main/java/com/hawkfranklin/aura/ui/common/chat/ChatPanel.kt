@@ -57,6 +57,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -523,8 +524,23 @@ fun ChatPanel(
 
         SnackbarHost(hostState = snackbarHostState, modifier = Modifier.padding(vertical = 4.dp))
 
+        // Show starter prompts for text tasks and image tasks so the empty state is immediately usable.
+        if (
+          messages.isEmpty() &&
+            (task.id == BuiltInTaskId.LLM_CHAT || task.id == BuiltInTaskId.LLM_PROMPT_LAB || task.id == BuiltInTaskId.LLM_ASK_IMAGE)
+        ) {
+          StarterPromptChips(
+            task = task,
+            onPromptClicked = { prompt ->
+              onSendMessage(
+                selectedModel,
+                listOf(ChatMessageText(content = prompt, side = ChatSide.USER)),
+              )
+            }
+          )
+        }
         // Show an info message for ask image task to get users started.
-        if (task.id == BuiltInTaskId.LLM_ASK_IMAGE && messages.isEmpty()) {
+        else if (task.id == BuiltInTaskId.LLM_ASK_IMAGE && messages.isEmpty()) {
           Column(
             modifier =
               Modifier.padding(horizontal = 16.dp).fillMaxSize().semantics(
@@ -667,6 +683,50 @@ fun ChatPanel(
               )
               Text("Copy text")
             }
+          }
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun StarterPromptChips(task: Task, onPromptClicked: (String) -> Unit) {
+  val prompts = if (task.id == BuiltInTaskId.LLM_ASK_IMAGE) {
+    listOf(
+      "What is in this photo?",
+      "Read the text",
+      "Explain this image",
+      "Describe this scene"
+    )
+  } else {
+    listOf(
+      stringResource(R.string.starter_prompt_summarize),
+      stringResource(R.string.starter_prompt_explain),
+      stringResource(R.string.starter_prompt_draft),
+      stringResource(R.string.starter_prompt_ideas),
+    )
+  }
+
+  Column(
+    modifier =
+      Modifier.padding(horizontal = 24.dp).fillMaxSize().semantics(mergeDescendants = true) {
+        liveRegion = LiveRegionMode.Polite
+      },
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center,
+  ) {
+    Text(
+      stringResource(R.string.app_tagline),
+      style = MaterialTheme.typography.titleMedium,
+      color = MaterialTheme.colorScheme.onSurface,
+      modifier = Modifier.padding(bottom = 16.dp),
+    )
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+      prompts.chunked(2).forEach { rowPrompts ->
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+          rowPrompts.forEach { prompt ->
+            OutlinedButton(onClick = { onPromptClicked(prompt) }) { Text(prompt) }
           }
         }
       }

@@ -16,27 +16,28 @@
 
 <resources>
   <!-- TODO(jingjin): Add translation support when i18n is ready. -->
-  <string name="app_name" translatable="false">AURA</string>
-  <string name="app_name_first_part" translatable="false">AURA</string>
-  <string name="app_name_second_part" translatable="false">PRIVATE LOCAL AI</string>
-  <string name="app_intro" translatable="false">Private, on-device AI optimized for mobile research.</string>
+  <string name="app_name" translatable="false">Nimbo</string>
+  <string name="app_name_first_part" translatable="false">Nimbo</string>
+  <string name="app_name_second_part" translatable="false">POCKET OFFLINE AI</string>
+  <string name="app_tagline" translatable="false">The AI that doesn\'t need the internet.</string>
+  <string name="app_intro" translatable="false">Your private AI. On or offline.</string>
   <string name="best_overall" translatable="false">Best overall</string>
   <plurals name="model_list_number_of_models_available" translatable="false">
     <item quantity="one">%d model available</item>
     <item quantity="other">%d models available</item>
   </plurals>
-  <string name="model_list_recommended_models_title" translatable="false">Recommended models</string>
-  <string name="model_list_imported_models_title" translatable="false">Imported models</string>
+  <string name="model_list_recommended_models_title" translatable="false">Pick your AI</string>
+  <string name="model_list_imported_models_title" translatable="false">Your imports</string>
   <string name="model_list_experimental_label" translatable="false">EXPERIMENTAL</string>
   <string name="model_manager" translatable="false">Models</string>
   <string name="download" translatable="false">Download</string>
   <string name="downloaded_size" translatable="false">%1$s downloaded</string>
   <string name="cancel" translatable="false">Cancel</string>
   <string name="category_unlabeled" translatable="false">Unlabeled</string>
-  <string name="category_llm" translatable="false">LLM</string>
+  <string name="category_llm" translatable="false">Chat &amp; Tools</string>
   <string name="category_agents" translatable="false">Agents</string>
   <string name="category_classical_ml" translatable="false">Classical ML</string>
-  <string name="category_experimental" translatable="false">Experimental</string>
+  <string name="category_experimental" translatable="false">Labs</string>
   <string name="checking_access" translatable="false">Checking access...</string>
   <string name="ok" translatable="false">OK</string>
   <string name="close" translatable="false">Close</string>
@@ -49,33 +50,39 @@
   <string name="notification_content_success" translatable="false">Model \"%s\" has been downloaded</string>
   <string name="notification_title_fail" translatable="false">Model download failed</string>
   <string name="notification_content_fail" translatable="false">Failed to download model \"%s\"</string>
-  <string name="chat_textinput_placeholder" translatable="false">Type message…</string>
+  <string name="chat_textinput_placeholder" translatable="false">Ask anything…</string>
   <string name="chat_you" translatable="false">You</string>
-  <string name="chat_llm_agent_name" translatable="false">LLM</string>
+  <string name="chat_llm_agent_name" translatable="false">Nimbo</string>
   <string name="chat_agent_agent_name" translatable="false">Agent</string>
-  <string name="chat_generic_agent_name" translatable="false">Model</string>
+  <string name="chat_generic_agent_name" translatable="false">Nimbo</string>
   <string name="chat_generic_result_name" translatable="false">Result</string>
   <string name="learn_more" translatable="false">Learn more</string>
-  <string name="litert_community_label" translatable="false">Model Library</string>
+  <string name="litert_community_label" translatable="false">Browse AI models</string>
   <string name="loading_model_list" translatable="false">Loading model list...</string>
-  <string name="memory_warning_title" translatable="false">Memory Warning</string>
-  <string name="memory_warning_content" translatable="false">The model you\'ve selected may exceed your device\'s memory, which can cause the app to crash. For the best experience, we recommend trying a smaller model.</string>
-  <string name="memory_warning_proceed_anyway" translatable="false">Proceed anyway</string>
+  <string name="memory_warning_title" translatable="false">Heads up</string>
+  <string name="memory_warning_content" translatable="false">This model is large and may run slowly or crash on your phone. Want to start with a lighter one instead?</string>
+  <string name="memory_warning_proceed_anyway" translatable="false">Download anyway</string>
+  <string name="memory_warning_use_lighter_model" translatable="false">Use a lighter model</string>
   <string name="model_not_downloaded_msg" translatable="false">Model not downloaded yet</string>
   <string name="model_is_initializing_msg" translatable="false">Initializing model…</string>
   <string name="reset" translatable="false">Reset</string>
   <string name="reset_note" translatable="false">Tapping \"Reset\" will reset LiteRT-LM engine only. The game progress won\'t be affected.</string>
   <string name="resetting_engine" translatable="false">Resetting engine...</string>
   <string name="reinitializing_description" translatable="false">The game progress won\'t be affected</string>
-  <string name="settings_dialog_tos_title" translatable="false">Research notice</string>
+  <string name="settings_dialog_tos_title" translatable="false">Privacy note</string>
   <string name="text_input_placeholder_text_classification" translatable="false">Type movie review to classify…</string>
-  <string name="text_image_generation_text_field_placeholder" translatable="false">Type prompt…</string>
-  <string name="text_input_placeholder_llm_chat" translatable="false">Type prompt…</string>
-  <string name="tos_dialog_title" translatable="false">Welcome to AURA</string>
-  <string name="tos_dialog_view_accept_button_label" translatable="false">Accept &amp; Continue</string>
+  <string name="text_image_generation_text_field_placeholder" translatable="false">Ask anything…</string>
+  <string name="text_input_placeholder_llm_chat" translatable="false">Ask anything…</string>
+  <string name="tos_dialog_title" translatable="false">Welcome to Nimbo</string>
+  <string name="tos_dialog_view_accept_button_label" translatable="false">Get started</string>
+  <string name="tos_dialog_next_button_label" translatable="false">Next</string>
+  <string name="tos_dialog_page_1_title" translatable="false">AI that lives on your phone</string>
+  <string name="tos_dialog_page_1_body" translatable="false">Download a model once, then use it anywhere, even in airplane mode.</string>
+  <string name="tos_dialog_page_2_title" translatable="false">Private by design</string>
+  <string name="tos_dialog_page_2_body" translatable="false">Your chats run on this device after a model is downloaded. No account is needed to start.</string>
   <string name="try_it" translatable="false">Try it</string>
   <string name="run_again" translatable="false">Run again</string>
-  <string name="benchmark" translatable="false">Run benchmark</string>
+  <string name="benchmark" translatable="false">Test speed on my phone</string>
   <string name="warming_up" translatable="false">warming up…</string>
   <string name="running" translatable="false">running</string>
   <string name="enter_instruction" translatable="false">Enter instruction</string>
@@ -84,6 +91,14 @@
   <string name="release_to_send" translatable="false">Release to send</string>
   <string name="slide_up_to_cancel" translatable="false">Slide up to cancel</string>
   <string name="listening" translatable="false">Listening...</string>
+  <string name="first_model_title" translatable="false">Download your first AI</string>
+  <string name="first_model_body" translatable="false">Start with a fast model that works on most phones. Download it once, then chat anywhere.</string>
+  <string name="first_model_button" translatable="false">Download starter model</string>
+  <string name="offline_badge" translatable="false">Offline ready</string>
+  <string name="starter_prompt_summarize" translatable="false">Summarize this</string>
+  <string name="starter_prompt_explain" translatable="false">Explain simply</string>
+  <string name="starter_prompt_draft" translatable="false">Draft a message</string>
+  <string name="starter_prompt_ideas" translatable="false">Give me ideas</string>
   <string name="grant_record_audio_permission" translatable="false">Grant record audio permission</string>
   <string name="unsupported_action" translatable="false">Unsupported action</string>
   <string name="flashlight_on_message" translatable="false">I\'ve turned on the flashlight.</string>

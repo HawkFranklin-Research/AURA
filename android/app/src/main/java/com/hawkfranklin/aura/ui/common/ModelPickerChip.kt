@@ -61,10 +61,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.hawkfranklin.aura.R
 import com.hawkfranklin.aura.data.Model
+import com.hawkfranklin.aura.data.ModelDownloadStatusType
 import com.hawkfranklin.aura.data.Task
 import com.hawkfranklin.aura.ui.common.modelitem.StatusIcon
 import com.hawkfranklin.aura.ui.modelmanager.ModelInitializationStatusType
 import com.hawkfranklin.aura.ui.modelmanager.ModelManagerViewModel
+import com.hawkfranklin.aura.ui.theme.customColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,11 +86,14 @@ fun ModelPickerChip(
   val screenWidthDp = remember { with(density) { windowInfo.containerSize.width.toDp() } }
 
   val modelInitializationStatus = modelManagerUiState.modelInitializationStatus[initialModel.name]
+  val isOfflineReady =
+    modelManagerUiState.modelDownloadStatus[initialModel.name]?.status ==
+      ModelDownloadStatusType.SUCCEEDED
 
   Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
     Row(
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(2.dp),
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       val modelName = initialModel.displayName.ifEmpty { initialModel.name }
       val cdChangeModel = stringResource(R.string.cd_change_model, modelName)
@@ -142,6 +147,29 @@ fun ModelPickerChip(
           modifier = Modifier.size(20.dp),
           contentDescription = null,
         )
+      }
+      AnimatedVisibility(visible = isOfflineReady, enter = fadeIn(), exit = fadeOut()) {
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(4.dp),
+          modifier =
+            Modifier.clip(CircleShape)
+              .background(MaterialTheme.customColors.successColor.copy(alpha = 0.14f))
+              .padding(horizontal = 8.dp, vertical = 4.dp),
+        ) {
+          Box(
+            modifier =
+              Modifier.size(7.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.customColors.successColor)
+          )
+          Text(
+            stringResource(R.string.offline_badge),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.customColors.successColor,
+            maxLines = 1,
+          )
+        }
       }
     }
   }

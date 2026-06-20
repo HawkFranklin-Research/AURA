@@ -43,7 +43,11 @@ fun MemoryWarningAlert(onProceeded: () -> Unit, onDismissed: () -> Unit) {
         Text(stringResource(R.string.memory_warning_proceed_anyway))
       }
     },
-    dismissButton = { TextButton(onClick = onDismissed) { Text(stringResource(R.string.cancel)) } },
+    dismissButton = {
+      TextButton(onClick = onDismissed) {
+        Text(stringResource(R.string.memory_warning_use_lighter_model))
+      }
+    },
   )
 }
 

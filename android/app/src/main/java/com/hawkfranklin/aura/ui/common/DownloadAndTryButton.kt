@@ -125,6 +125,7 @@ fun DownloadAndTryButton(
   modifier: Modifier = Modifier,
   compact: Boolean = false,
   canShowTryIt: Boolean = true,
+  customDownloadTextRes: Int? = null,
 ) {
   val scope = rememberCoroutineScope()
   val context = LocalContext.current
@@ -372,7 +373,7 @@ fun DownloadAndTryButton(
         if (!compact) {
           if (needToDownloadFirst) {
             Text(
-              stringResource(R.string.download),
+              stringResource(customDownloadTextRes ?: R.string.download),
               color = textColor,
               style = MaterialTheme.typography.titleMedium,
             )
@@ -522,7 +523,13 @@ fun DownloadAndTryButton(
         handleClickButton()
         showMemoryWarning = false
       },
-      onDismissed = { showMemoryWarning = false },
+      onDismissed = {
+        val lighterModel = task.models.filter { !it.imported }.minByOrNull { it.sizeInBytes }
+        if (lighterModel != null) {
+          modelManagerViewModel.selectModel(lighterModel)
+        }
+        showMemoryWarning = false
+      },
     )
   }
 }

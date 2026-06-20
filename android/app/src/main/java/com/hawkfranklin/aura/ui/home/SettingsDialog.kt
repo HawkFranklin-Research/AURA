@@ -155,20 +155,20 @@ fun SettingsDialog(
             verticalArrangement = Arrangement.spacedBy(4.dp),
           ) {
             Text(
-              "What is AURA?",
+              "What is Nimbo?",
               style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
             )
             Text(
-              "Android Utility for Runtime AI.",
+              "Your AI, in your pocket, on or offline.",
               style = MaterialTheme.typography.bodyMedium,
             )
             Text(
-              "AURA is a private, on-device AI app for local research and experimentation. It runs open-source models directly on your phone, works offline after download, and stays ad-free.",
+              "Nimbo runs open-source AI models directly on your phone. Download a model once, then chat, ask, and test prompts even when the internet is unavailable.",
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-              "Built by HawkFranklin Research.",
+              "Previously AURA. Built by HawkFranklin Research.",
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -184,7 +184,7 @@ fun SettingsDialog(
               style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
             )
             Text(
-              "AURA does not collect or transmit your prompts, images, audio, or outputs. All inference runs on-device and stays private.",
+              "Your prompts, images, audio, and model outputs are processed on this device during inference.",
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -194,7 +194,7 @@ fun SettingsDialog(
             )
             ClickableLink(
               url = "https://hawkfranklin.in/products/aura2.html",
-              linkText = "AURA product page",
+              linkText = "Product page",
             )
           }
 
@@ -369,7 +369,7 @@ fun SettingsDialog(
               stringResource(R.string.settings_dialog_tos_title),
               style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
             )
-            OutlinedButton(onClick = { showTos = true }) { Text("View notice") }
+            OutlinedButton(onClick = { showTos = true }) { Text("View note") }
           }
 
           // Exit
@@ -378,7 +378,7 @@ fun SettingsDialog(
               "Exit",
               style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
             )
-            OutlinedButton(onClick = { showExitConfirm = true }) { Text("Exit Aura") }
+            OutlinedButton(onClick = { showExitConfirm = true }) { Text("Exit Nimbo") }
           }
         }
 
@@ -401,8 +401,8 @@ fun SettingsDialog(
   if (showExitConfirm) {
     AlertDialog(
       onDismissRequest = { showExitConfirm = false },
-      title = { Text("Exit Aura") },
-      text = { Text("Mischief Managed.") },
+      title = { Text("Exit Nimbo") },
+      text = { Text("Close the app for now?") },
       confirmButton = {
         Button(
           onClick = {
@@ -422,10 +422,10 @@ fun SettingsDialog(
 
 private fun themeLabel(theme: Theme): String {
   return when (theme) {
-    Theme.THEME_AUTO -> "Auto"
+    Theme.THEME_AUTO -> "System"
     Theme.THEME_LIGHT -> "Light"
     Theme.THEME_DARK -> "Dark"
-    Theme.THEME_AURA -> "Aura"
+    Theme.THEME_AURA -> "Cosmic"
     else -> "Unknown"
   }
 }

@@ -119,6 +119,9 @@ import com.hawkfranklin.aura.ui.common.tos.TosViewModel
 import com.hawkfranklin.aura.ui.modelmanager.ModelManagerViewModel
 import com.hawkfranklin.aura.ui.theme.customColors
 import com.hawkfranklin.aura.ui.theme.homePageTitleStyle
+import androidx.compose.ui.text.font.FontWeight
+import com.hawkfranklin.aura.ui.common.DownloadAndTryButton
+import com.hawkfranklin.aura.data.ModelDownloadStatusType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -349,6 +352,66 @@ fun HomeScreen(
                 IntroText(enableAnimation = enableAnimation)
               }
 
+              // Find the chat task and starter model (smallest allowlisted recommended chat model).
+              val chatTask = tasks.find { it.id == BuiltInTaskId.LLM_CHAT }
+              val recommendedChatModels = chatTask?.models?.filter { !it.imported } ?: emptyList()
+              val anyChatModelDownloaded = recommendedChatModels.any { model ->
+                uiState.modelDownloadStatus[model.name]?.status == ModelDownloadStatusType.SUCCEEDED
+              }
+              val starterModel = remember(recommendedChatModels) {
+                recommendedChatModels.minByOrNull { it.sizeInBytes }
+              }
+
+              // Auto-navigate to Chat task once download finishes.
+              val starterModelStatus = starterModel?.let { uiState.modelDownloadStatus[it.name] }
+              LaunchedEffect(starterModelStatus?.status) {
+                if (starterModelStatus?.status == ModelDownloadStatusType.SUCCEEDED && chatTask != null) {
+                  navigateToTaskScreen(chatTask)
+                }
+              }
+
+              // Onboarding Card for downloading the first model
+              if (starterModel != null && !anyChatModelDownloaded && chatTask != null) {
+                Card(
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 32.dp),
+                  shape = RoundedCornerShape(28.dp),
+                  colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.customColors.taskCardBgColor
+                  )
+                ) {
+                  Column(
+                    modifier = Modifier.padding(24.dp)
+                  ) {
+                    Text(
+                      text = stringResource(R.string.first_model_title),
+                      style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                      color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                      text = stringResource(R.string.first_model_body),
+                      style = MaterialTheme.typography.bodyMedium,
+                      color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    
+                    DownloadAndTryButton(
+                      task = chatTask,
+                      model = starterModel,
+                      enabled = true,
+                      downloadStatus = starterModelStatus,
+                      modelManagerViewModel = modelManagerViewModel,
+                      customDownloadTextRes = R.string.first_model_button,
+                      canShowTryIt = false,
+                      onClicked = {},
+                      modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    )
+                  }
+                }
+              }
+
               // Tab header for categories.
               //
               // synchronizes the `pagerState` and the `selectedCategoryIndex` to ensure that
@@ -482,21 +545,40 @@ fun HomeScreen(
 
 @Composable
 private fun AppTitle(enableAnimation: Boolean) {
-  val titleText = "AURA\nLocal AI Research Lab"
+  val titleText = stringResource(R.string.app_name)
   val screenWidthInDp = LocalConfiguration.current.screenWidthDp.dp
   val fontSize = with(LocalDensity.current) { (screenWidthInDp.toPx() * 0.08f).toSp() }
   val titleStyle = homePageTitleStyle.copy(fontSize = fontSize, lineHeight = fontSize)
 
-  Box(modifier = Modifier.clearAndSetSemantics {}) {
-    RevealingText(
-      text = titleText,
-      style =
-        titleStyle.copy(
-          brush = linearGradient(colors = MaterialTheme.customColors.appTitleGradientColors),
-          textAlign = TextAlign.Center,
-        ),
-      animationDelay = if (enableAnimation) ANIMATION_INIT_DELAY else 0,
-      animationDurationMs = if (enableAnimation) TITLE_SECOND_LINE_ANIMATION_DURATION2 else 0,
+  val progress =
+    if (!enableAnimation) 1f
+    else
+      rememberDelayedAnimationProgress(
+        initialDelay = TITLE_SECOND_LINE_ANIMATION_START,
+        animationDurationMs = CONTENT_COMPOSABLES_ANIMATION_DURATION,
+        animationLabel = "tagline animation",
+      )
+
+  Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Box(modifier = Modifier.clearAndSetSemantics {}) {
+      RevealingText(
+        text = titleText,
+        style =
+          titleStyle.copy(
+            brush = linearGradient(colors = MaterialTheme.customColors.appTitleGradientColors),
+          ),
+        animationDelay = if (enableAnimation) ANIMATION_INIT_DELAY else 0,
+        animationDurationMs = if (enableAnimation) TITLE_SECOND_LINE_ANIMATION_DURATION2 else 0,
+      )
+    }
+    Text(
+      text = stringResource(R.string.app_tagline),
+      style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
+      modifier = Modifier.graphicsLayer {
+        alpha = progress
+        translationY = (CONTENT_COMPOSABLES_OFFSET_Y.dp * (1 - progress)).toPx()
+      }
     )
   }
 }
@@ -520,6 +602,7 @@ private fun IntroText(enableAnimation: Boolean) {
       )
 
   val introText = buildAnnotatedString {
+    append("${stringResource(R.string.app_tagline)} ")
     append("${stringResource(R.string.app_intro)} ")
     // TODO: Consolidate the link clicking logic into ui/common/ClickableLink.kt.
     withLink(
@@ -707,8 +790,8 @@ private fun TaskCard(
   val modelCountLabel by remember {
     derivedStateOf {
       when (modelCount) {
-        1 -> "1 Model"
-        else -> "%d Models".format(modelCount)
+        1 -> "1 model available"
+        else -> "%d models available".format(modelCount)
       }
     }
   }
@@ -772,6 +855,12 @@ private fun TaskCard(
             )
           }
         }
+        Text(
+          task.description,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          style = MaterialTheme.typography.bodyMedium,
+          modifier = Modifier.clearAndSetSemantics {},
+        )
         Text(
           curModelCountLabel,
           color = MaterialTheme.colorScheme.onSurfaceVariant,

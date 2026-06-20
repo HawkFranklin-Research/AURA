@@ -73,6 +73,8 @@ fun ModelPageAppBar(
   onResetSessionClicked: (Model) -> Unit = {},
   canShowResetSessionButton: Boolean = false,
   hideModelSelector: Boolean = false,
+  navigationIcon: ImageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+  navigationContentDescription: String? = null,
   onConfigChanged: (oldConfigValues: Map<String, Any>, newConfigValues: Map<String, Any>) -> Unit =
     { _, _ ->
     },
@@ -130,8 +132,9 @@ fun ModelPageAppBar(
       val enableBackButton = !isModelInitializing && !inProgress
       IconButton(onClick = onBackClicked, enabled = enableBackButton) {
         Icon(
-          imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-          contentDescription = stringResource(R.string.cd_navigate_back_icon),
+          imageVector = navigationIcon,
+          contentDescription =
+            navigationContentDescription ?: stringResource(R.string.cd_navigate_back_icon),
         )
       }
     },

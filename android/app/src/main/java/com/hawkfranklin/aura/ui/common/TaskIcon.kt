@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush.Companion.linearGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -75,7 +76,7 @@ fun TaskIcon(
         )
     )
   Box(modifier = modifier.width(width).aspectRatio(1f), contentAlignment = Alignment.Center) {
-    val brush = linearGradient(colors = getTaskBgGradientColors(task = task))
+    val brush = SolidColor(Color(0xFFCD410B))
     Image(
       painter = getTaskIconBgShape(task = task),
       contentDescription = null,
@@ -113,8 +114,7 @@ fun TaskIcon(
 
 @Composable
 private fun getTaskIconBgShape(task: Task): Painter {
-  val colorIndex: Int = task.index % SHAPES.size
-  return painterResource(SHAPES[colorIndex])
+  return painterResource(R.drawable.circle)
 }
 
 // @Preview(showBackground = true)

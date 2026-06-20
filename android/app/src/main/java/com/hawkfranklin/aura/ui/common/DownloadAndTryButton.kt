@@ -24,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -330,18 +331,17 @@ fun DownloadAndTryButton(
     if (!compact) {
       buttonModifier = buttonModifier.fillMaxWidth()
     }
+    val isNotDownloaded = (!downloadSucceeded || !canShowTryIt) && model.localFileRelativeDirPathOverride.isEmpty()
     Button(
       modifier = buttonModifier,
       colors =
         ButtonDefaults.buttonColors(
           containerColor =
-            if (
-              (!downloadSucceeded || !canShowTryIt) &&
-                model.localFileRelativeDirPathOverride.isEmpty()
-            )
+            if (isNotDownloaded)
               MaterialTheme.colorScheme.surfaceContainer
             else getTaskBgGradientColors(task = task)[1]
         ),
+      border = if (isNotDownloaded) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null,
       contentPadding = PaddingValues(horizontal = 12.dp),
       onClick = {
         if (!enabled || checkingToken) {
@@ -356,8 +356,8 @@ fun DownloadAndTryButton(
       },
     ) {
       val textColor =
-        if (!downloadSucceeded && model.localFileRelativeDirPathOverride.isEmpty())
-          MaterialTheme.colorScheme.onSurface
+        if (isNotDownloaded)
+          MaterialTheme.colorScheme.primary
         else Color.White
       Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -523,13 +523,7 @@ fun DownloadAndTryButton(
         handleClickButton()
         showMemoryWarning = false
       },
-      onDismissed = {
-        val lighterModel = task.models.filter { !it.imported }.minByOrNull { it.sizeInBytes }
-        if (lighterModel != null) {
-          modelManagerViewModel.selectModel(lighterModel)
-        }
-        showMemoryWarning = false
-      },
+      onDismissed = { showMemoryWarning = false },
     )
   }
 }

@@ -61,7 +61,7 @@
   <string name="loading_model_list" translatable="false">Loading model list...</string>
   <string name="memory_warning_title" translatable="false">Heads up</string>
   <string name="memory_warning_content" translatable="false">This model is large and may run slowly or crash on your phone. Want to start with a lighter one instead?</string>
-  <string name="memory_warning_proceed_anyway" translatable="false">Download anyway</string>
+  <string name="memory_warning_proceed_anyway" translatable="false">Proceed anyway</string>
   <string name="memory_warning_use_lighter_model" translatable="false">Use a lighter model</string>
   <string name="model_not_downloaded_msg" translatable="false">Model not downloaded yet</string>
   <string name="model_is_initializing_msg" translatable="false">Initializing model…</string>
@@ -95,6 +95,8 @@
   <string name="first_model_body" translatable="false">Start with a fast model that works on most phones. Download it once, then chat anywhere.</string>
   <string name="first_model_button" translatable="false">Download starter model</string>
   <string name="offline_badge" translatable="false">Offline ready</string>
+  <string name="images_supported" translatable="false">Images supported</string>
+  <string name="use_vision_model_to_attach_images" translatable="false">Use a vision model to attach images</string>
   <string name="starter_prompt_summarize" translatable="false">Summarize this</string>
   <string name="starter_prompt_explain" translatable="false">Explain simply</string>
   <string name="starter_prompt_draft" translatable="false">Draft a message</string>

@@ -134,6 +134,13 @@ fun ModelPicker(
               color = MaterialTheme.colorScheme.onSurfaceVariant,
               style = labelSmallNarrow.copy(lineHeight = 10.sp),
             )
+            if (model.llmSupportImage) {
+              Text(
+                text = "- ${stringResource(R.string.images_supported)}",
+                color = MaterialTheme.colorScheme.primary,
+                style = labelSmallNarrow.copy(lineHeight = 10.sp),
+              )
+            }
           }
         }
         if (selected) {

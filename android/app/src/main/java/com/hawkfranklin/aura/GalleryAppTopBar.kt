@@ -34,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -62,6 +63,10 @@ fun GalleryTopAppBar(
 ) {
   val titleColor = MaterialTheme.colorScheme.onSurface
   CenterAlignedTopAppBar(
+    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+      containerColor = Color.Transparent,
+      scrolledContainerColor = Color.Transparent,
+    ),
     title = {
       Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
@@ -69,14 +74,6 @@ fun GalleryTopAppBar(
           horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
           val isAppTitle = title == stringResource(R.string.app_name)
-          if (isAppTitle) {
-            Icon(
-              painterResource(R.drawable.logo_new_black),
-              modifier = Modifier.size(20.dp),
-              contentDescription = null,
-              tint = Color.Unspecified,
-            )
-          }
           if (isAppTitle) {
             BasicText(
               text = title,

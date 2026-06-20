@@ -623,9 +623,11 @@ fun ChatPanel(
         onAmplitudeChanged = { curAmplitude = it },
         showPromptTemplatesInMenu = false,
         showImagePickerInMenu =
-          selectedModel.llmSupportImage && task.id === BuiltInTaskId.LLM_ASK_IMAGE,
+          task.id === BuiltInTaskId.LLM_CHAT || task.id === BuiltInTaskId.LLM_ASK_IMAGE,
+        enableImagePickerMenuItems = selectedModel.llmSupportImage,
         showAudioItemsInMenu =
-          selectedModel.llmSupportAudio && task.id === BuiltInTaskId.LLM_ASK_AUDIO,
+          selectedModel.llmSupportAudio &&
+            (task.id === BuiltInTaskId.LLM_CHAT || task.id === BuiltInTaskId.LLM_ASK_AUDIO),
         showStopButtonWhenInProgress = showStopButtonInInputWhenInProgress,
       )
     }

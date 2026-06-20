@@ -164,6 +164,7 @@ fun MessageInputText(
   onAmplitudeChanged: (Int) -> Unit,
   showPromptTemplatesInMenu: Boolean = false,
   showImagePickerInMenu: Boolean = false,
+  enableImagePickerMenuItems: Boolean = true,
   showAudioItemsInMenu: Boolean = false,
   showStopButtonWhenInProgress: Boolean = false,
 ) {
@@ -363,8 +364,10 @@ fun MessageInputText(
                   expanded = showAddContentMenu,
                   onDismissRequest = { showAddContentMenu = false },
                 ) {
-                  // Image related menu items.
+                  // Image related menu items. Keep these visible so text-only models can explain
+                  // why image upload is unavailable instead of hiding the capability entirely.
                   if (showImagePickerInMenu) {
+                    val enableImageActions = enableImagePickerMenuItems && enableAddImageMenuItems
                     // Take a picture.
                     DropdownMenuItem(
                       text = {
@@ -373,10 +376,19 @@ fun MessageInputText(
                           horizontalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
                           Icon(Icons.Rounded.PhotoCamera, contentDescription = null)
-                          Text("Take a picture")
+                          Column {
+                            Text("Take a picture")
+                            if (!enableImagePickerMenuItems) {
+                              Text(
+                                stringResource(R.string.use_vision_model_to_attach_images),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                              )
+                            }
+                          }
                         }
                       },
-                      enabled = enableAddImageMenuItems,
+                      enabled = enableImageActions,
                       onClick = {
                         // Check permission
                         when (PackageManager.PERMISSION_GRANTED) {
@@ -405,10 +417,19 @@ fun MessageInputText(
                           horizontalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
                           Icon(Icons.Rounded.Photo, contentDescription = null)
-                          Text("Pick from album")
+                          Column {
+                            Text("Pick from album")
+                            if (!enableImagePickerMenuItems) {
+                              Text(
+                                stringResource(R.string.use_vision_model_to_attach_images),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                              )
+                            }
+                          }
                         }
                       },
-                      enabled = enableAddImageMenuItems,
+                      enabled = enableImageActions,
                       onClick = {
                         // Launch the photo picker and let the user choose only images.
                         pickMedia.launch(

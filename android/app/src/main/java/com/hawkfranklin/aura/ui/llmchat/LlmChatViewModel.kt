@@ -204,10 +204,12 @@ open class LlmChatViewModelBase() : ChatViewModel() {
         try {
           val supportImage =
             model.llmSupportImage &&
-              task.id == com.hawkfranklin.aura.data.BuiltInTaskId.LLM_ASK_IMAGE
+              (task.id == com.hawkfranklin.aura.data.BuiltInTaskId.LLM_CHAT ||
+                task.id == com.hawkfranklin.aura.data.BuiltInTaskId.LLM_ASK_IMAGE)
           val supportAudio =
             model.llmSupportAudio &&
-              task.id == com.hawkfranklin.aura.data.BuiltInTaskId.LLM_ASK_AUDIO
+              (task.id == com.hawkfranklin.aura.data.BuiltInTaskId.LLM_CHAT ||
+                task.id == com.hawkfranklin.aura.data.BuiltInTaskId.LLM_ASK_AUDIO)
           LlmChatModelHelper.resetConversation(
             model = model,
             supportImage = supportImage,

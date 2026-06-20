@@ -354,7 +354,7 @@ fun ModelList(
           .height(96.dp)
           .background(
             Brush.verticalGradient(
-              colors = listOf(Color.Transparent, MaterialTheme.colorScheme.surfaceContainer)
+              colors = listOf(Color.Transparent, getTaskBgColor(task = task))
             )
           )
           .align(Alignment.BottomCenter)

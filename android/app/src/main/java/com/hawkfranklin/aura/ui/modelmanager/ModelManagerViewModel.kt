@@ -216,6 +216,15 @@ constructor(
     _uiState.update { _uiState.value.copy(selectedModel = model) }
   }
 
+  fun selectDefaultModelForTaskIfNeeded(taskId: String) {
+    val task = getTaskById(taskId) ?: return
+    val currentModel = _uiState.value.selectedModel
+    if (task.models.any { it.name == currentModel.name }) {
+      return
+    }
+    selectModel(getPreferredModelForTask(task) ?: return)
+  }
+
   fun downloadModel(task: Task, model: Model) {
     // Update status.
     setDownloadStatus(
@@ -954,7 +963,17 @@ constructor(
       modelDownloadStatus = modelDownloadStatus,
       modelInitializationStatus = modelInstances,
       textInputHistory = textInputHistory,
+      selectedModel = getPreferredModelForTask(tasks[BuiltInTaskId.LLM_CHAT], modelDownloadStatus),
     )
+  }
+
+  private fun getPreferredModelForTask(
+    task: Task?,
+    modelDownloadStatus: Map<String, ModelDownloadStatus> = _uiState.value.modelDownloadStatus,
+  ): Model {
+    return task?.models?.firstOrNull {
+      modelDownloadStatus[it.name]?.status == ModelDownloadStatusType.SUCCEEDED
+    } ?: task?.models?.firstOrNull() ?: EMPTY_MODEL
   }
 
   private fun createModelFromImportedModelInfo(info: ImportedModel): Model {

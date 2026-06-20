@@ -22,6 +22,7 @@ package com.hawkfranklin.aura.ui.home
 import android.content.Context
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -330,7 +331,7 @@ fun HomeScreen(
         // Outer box for coloring the background edge to edge.
         Box(
           contentAlignment = Alignment.TopCenter,
-          modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainer),
+          modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
         ) {
           // Inner box to hold content.
           Box(
@@ -343,10 +344,11 @@ fun HomeScreen(
               // App title and intro text.
               Column(
                 modifier =
-                  Modifier.padding(horizontal = 40.dp, vertical = 48.dp).semantics(
+                  Modifier.fillMaxWidth().padding(horizontal = 40.dp, vertical = 48.dp).semantics(
                     mergeDescendants = true
                   ) {},
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
               ) {
                 AppTitle(enableAnimation = enableAnimation)
                 IntroText(enableAnimation = enableAnimation)
@@ -559,13 +561,25 @@ private fun AppTitle(enableAnimation: Boolean) {
         animationLabel = "tagline animation",
       )
 
-  Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(4.dp)
+  ) {
+    Image(
+      painter = painterResource(R.drawable.logo_new_black),
+      contentDescription = null,
+      modifier = Modifier.size(96.dp).graphicsLayer {
+        alpha = progress
+      },
+    )
+    Spacer(modifier = Modifier.height(12.dp))
     Box(modifier = Modifier.clearAndSetSemantics {}) {
       RevealingText(
         text = titleText,
         style =
           titleStyle.copy(
             brush = linearGradient(colors = MaterialTheme.customColors.appTitleGradientColors),
+            textAlign = TextAlign.Center,
           ),
         animationDelay = if (enableAnimation) ANIMATION_INIT_DELAY else 0,
         animationDurationMs = if (enableAnimation) TITLE_SECOND_LINE_ANIMATION_DURATION2 else 0,
@@ -575,6 +589,7 @@ private fun AppTitle(enableAnimation: Boolean) {
       text = stringResource(R.string.app_tagline),
       style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
       color = MaterialTheme.colorScheme.onSurfaceVariant,
+      textAlign = TextAlign.Center,
       modifier = Modifier.graphicsLayer {
         alpha = progress
         translationY = (CONTENT_COMPOSABLES_OFFSET_Y.dp * (1 - progress)).toPx()
@@ -625,8 +640,9 @@ private fun IntroText(enableAnimation: Boolean) {
   Text(
     introText,
     style = MaterialTheme.typography.bodyMedium,
+    textAlign = TextAlign.Center,
     modifier =
-      Modifier.graphicsLayer {
+      Modifier.fillMaxWidth().graphicsLayer {
         alpha = progress
         translationY = (CONTENT_COMPOSABLES_OFFSET_Y.dp * (1 - progress)).toPx()
       },

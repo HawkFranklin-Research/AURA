@@ -66,6 +66,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.hawkfranklin.aura.customtasks.common.CustomTaskData
 import com.hawkfranklin.aura.customtasks.common.CustomTaskDataForBuiltinTask
+import com.hawkfranklin.aura.data.BuiltInTaskId
 import com.hawkfranklin.aura.data.ModelDownloadStatusType
 import com.hawkfranklin.aura.data.Task
 import com.hawkfranklin.aura.data.isLegacyTasks
@@ -73,6 +74,8 @@ import com.hawkfranklin.aura.firebaseAnalytics
 import com.hawkfranklin.aura.ui.common.ErrorDialog
 import com.hawkfranklin.aura.ui.common.ModelPageAppBar
 import com.hawkfranklin.aura.ui.common.chat.ModelDownloadStatusInfoPanel
+import com.hawkfranklin.aura.ui.common.tos.TosDialog
+import com.hawkfranklin.aura.ui.common.tos.TosViewModel
 import com.hawkfranklin.aura.ui.home.HomeScreen
 import com.hawkfranklin.aura.ui.modelmanager.ModelInitializationStatusType
 import com.hawkfranklin.aura.ui.modelmanager.ModelManager
@@ -81,6 +84,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private const val TAG = "AGGalleryNavGraph"
+private const val ROUTE_CHAT = "chat"
 private const val ROUTE_HOMESCREEN = "homepage"
 private const val ROUTE_MODEL_LIST = "model_list"
 private const val ROUTE_MODEL = "route_model"
@@ -154,11 +158,46 @@ fun GalleryNavHost(
 
   NavHost(
     navController = navController,
-    // Default to open home screen.
-    startDestination = ROUTE_HOMESCREEN,
+    // Default to the chat-first experience.
+    startDestination = ROUTE_CHAT,
     enterTransition = { EnterTransition.None },
     exitTransition = { ExitTransition.None },
   ) {
+    // Chat-first screen.
+    composable(route = ROUTE_CHAT) {
+      val tosViewModel = hiltViewModel<TosViewModel>()
+      var showTos by remember { mutableStateOf(!tosViewModel.getIsTosAccepted()) }
+      val modelManagerUiState by modelManagerViewModel.uiState.collectAsState()
+
+      LaunchedEffect(modelManagerUiState.tasks, modelManagerUiState.selectedModel) {
+        modelManagerViewModel.selectDefaultModelForTaskIfNeeded(BuiltInTaskId.LLM_CHAT)
+      }
+
+      val customTask = modelManagerViewModel.getCustomTaskByTaskId(id = BuiltInTaskId.LLM_CHAT)
+      if (customTask != null) {
+        customTask.MainScreen(
+          data =
+            CustomTaskDataForBuiltinTask(
+              modelManagerViewModel = modelManagerViewModel,
+              onNavUp = {
+                pickedTask = customTask.task
+                enableHomeScreenAnimation = false
+                navController.navigate(ROUTE_HOMESCREEN) { launchSingleTop = true }
+              },
+            )
+        )
+      }
+
+      if (showTos) {
+        TosDialog(
+          onTosAccepted = {
+            tosViewModel.acceptTos()
+            showTos = false
+          }
+        )
+      }
+    }
+
     // Home screen.
     composable(route = ROUTE_HOMESCREEN) {
       HomeScreen(

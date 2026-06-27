@@ -168,6 +168,7 @@ fun GalleryNavHost(
       val tosViewModel = hiltViewModel<TosViewModel>()
       var showTos by remember { mutableStateOf(!tosViewModel.getIsTosAccepted()) }
       val modelManagerUiState by modelManagerViewModel.uiState.collectAsState()
+      val context = LocalContext.current
 
       LaunchedEffect(modelManagerUiState.tasks, modelManagerUiState.selectedModel) {
         modelManagerViewModel.selectDefaultModelForTaskIfNeeded(BuiltInTaskId.LLM_CHAT)
@@ -180,9 +181,8 @@ fun GalleryNavHost(
             CustomTaskDataForBuiltinTask(
               modelManagerViewModel = modelManagerViewModel,
               onNavUp = {
-                pickedTask = customTask.task
-                enableHomeScreenAnimation = false
-                navController.navigate(ROUTE_HOMESCREEN) { launchSingleTop = true }
+                val activity = context as? android.app.Activity
+                activity?.moveTaskToBack(true)
               },
             )
         )

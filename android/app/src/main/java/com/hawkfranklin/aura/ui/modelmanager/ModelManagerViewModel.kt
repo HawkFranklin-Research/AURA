@@ -1028,6 +1028,7 @@ constructor(
   private fun getModelDownloadStatus(model: Model): ModelDownloadStatus {
     Log.d(TAG, "Checking model ${model.name} download status...")
 
+
     if (model.localFileRelativeDirPathOverride.isNotEmpty()) {
       Log.d(TAG, "Model has localFileRelativeDirPathOverride set. Set status to SUCCEEDED")
       return ModelDownloadStatus(

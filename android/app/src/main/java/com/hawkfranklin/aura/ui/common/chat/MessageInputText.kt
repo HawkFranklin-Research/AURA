@@ -166,6 +166,7 @@ fun MessageInputText(
   showImagePickerInMenu: Boolean = false,
   enableImagePickerMenuItems: Boolean = true,
   showAudioItemsInMenu: Boolean = false,
+  enableAudioMenuItems: Boolean = true,
   showStopButtonWhenInProgress: Boolean = false,
 ) {
   val context = LocalContext.current
@@ -442,6 +443,7 @@ fun MessageInputText(
 
                   // Audio related menu items.
                   if (showAudioItemsInMenu) {
+                    val enableAudioActions = enableAudioMenuItems && enableRecordAudioClipMenuItems
                     DropdownMenuItem(
                       text = {
                         Row(
@@ -449,10 +451,19 @@ fun MessageInputText(
                           horizontalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
                           Icon(Icons.Rounded.Mic, contentDescription = null)
-                          Text("Record audio clip")
+                          Column {
+                            Text("Record audio clip")
+                            if (!enableAudioMenuItems) {
+                              Text(
+                                stringResource(R.string.use_audio_model_to_attach_audio),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                              )
+                            }
+                          }
                         }
                       },
-                      enabled = enableRecordAudioClipMenuItems,
+                      enabled = enableAudioActions,
                       onClick = {
                         // Check permission
                         when (PackageManager.PERMISSION_GRANTED) {
@@ -481,10 +492,19 @@ fun MessageInputText(
                           horizontalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
                           Icon(Icons.Rounded.AudioFile, contentDescription = null)
-                          Text("Pick wav file")
+                          Column {
+                            Text("Pick wav file")
+                            if (!enableAudioMenuItems) {
+                              Text(
+                                stringResource(R.string.use_audio_model_to_attach_audio),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                              )
+                            }
+                          }
                         }
                       },
-                      enabled = enableRecordAudioClipMenuItems,
+                      enabled = enableAudioActions,
                       onClick = {
                         showAddContentMenu = false
 

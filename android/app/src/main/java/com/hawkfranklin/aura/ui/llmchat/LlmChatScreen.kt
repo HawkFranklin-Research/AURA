@@ -98,6 +98,7 @@ fun ChatViewWrapper(
       for (message in messages) {
         viewModel.addMessage(model = model, message = message)
       }
+      viewModel.persistCurrentSession(context = context, task = task, model = model)
 
       var text = ""
       val images: MutableList<Bitmap> = mutableListOf()
@@ -116,6 +117,8 @@ fun ChatViewWrapper(
       if ((text.isNotEmpty() && chatMessageText != null) || audioMessages.isNotEmpty()) {
         modelManagerViewModel.addTextInputHistory(text)
         viewModel.generateResponse(
+          context = context,
+          task = task,
           model = model,
           input = text,
           images = images,
@@ -140,6 +143,8 @@ fun ChatViewWrapper(
     onRunAgainClicked = { model, message ->
       if (message is ChatMessageText) {
         viewModel.runAgain(
+          context = context,
+          task = task,
           model = model,
           message = message,
           onError = { errorMessage ->

@@ -21,6 +21,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.hawkfranklin.aura.data.ConfigKeys
+import com.hawkfranklin.aura.data.DataStoreRepository
 import com.hawkfranklin.aura.data.Model
 import com.hawkfranklin.aura.data.Task
 import com.hawkfranklin.aura.ui.common.chat.ChatMessageAudioClip
@@ -50,8 +51,11 @@ private val STATS =
     Stat(id = "latency", label = "Latency", unit = "sec"),
   )
 
-open class LlmChatViewModelBase() : ChatViewModel() {
+open class LlmChatViewModelBase(dataStoreRepository: DataStoreRepository) :
+  ChatViewModel(dataStoreRepository) {
   fun generateResponse(
+    context: Context,
+    task: Task,
     model: Model,
     input: String,
     images: List<Bitmap> = listOf(),
@@ -92,9 +96,10 @@ open class LlmChatViewModelBase() : ChatViewModel() {
       val start = System.currentTimeMillis()
 
       try {
+        val inputForModel = buildInputWithRestoredContextIfNeeded(model = model, latestInput = input)
         LlmChatModelHelper.runInference(
           model = model,
-          input = input,
+          input = inputForModel,
           images = images,
           audioClips = audioClips,
           resultListener = { partialResult, done ->
@@ -136,6 +141,7 @@ open class LlmChatViewModelBase() : ChatViewModel() {
 
             if (done) {
               setInProgress(false)
+              persistCurrentSession(context = context, task = task, model = model)
 
               decodeSpeed = decodeTokens / ((curTs - firstTokenTs) / 1000f)
               if (decodeSpeed.isNaN()) {
@@ -166,6 +172,7 @@ open class LlmChatViewModelBase() : ChatViewModel() {
           cleanUpListener = {
             setInProgress(false)
             setPreparing(false)
+            persistCurrentSession(context = context, task = task, model = model)
           },
           onError = { message ->
             Log.e(TAG, "Error occurred while running inference")
@@ -198,6 +205,7 @@ open class LlmChatViewModelBase() : ChatViewModel() {
     viewModelScope.launch(Dispatchers.Default) {
       setIsResettingSession(true)
       clearAllMessages(model = model)
+      startNewSession(model = model)
       stopResponse(model = model)
 
       while (true) {
@@ -225,7 +233,13 @@ open class LlmChatViewModelBase() : ChatViewModel() {
     }
   }
 
-  fun runAgain(model: Model, message: ChatMessageText, onError: (String) -> Unit) {
+  fun runAgain(
+    context: Context,
+    task: Task,
+    model: Model,
+    message: ChatMessageText,
+    onError: (String) -> Unit,
+  ) {
     viewModelScope.launch(Dispatchers.Default) {
       // Wait for model to be initialized.
       while (model.instance == null) {
@@ -236,7 +250,14 @@ open class LlmChatViewModelBase() : ChatViewModel() {
       addMessage(model = model, message = message.clone())
 
       // Run inference.
-      generateResponse(model = model, input = message.content, onError = onError)
+      persistCurrentSession(context = context, task = task, model = model)
+      generateResponse(
+        context = context,
+        task = task,
+        model = model,
+        input = message.content,
+        onError = onError,
+      )
     }
   }
 
@@ -254,6 +275,7 @@ open class LlmChatViewModelBase() : ChatViewModel() {
 
     // Show error message.
     addMessage(model = model, message = ChatMessageError(content = errorMessage))
+    persistCurrentSession(context = context, task = task, model = model)
 
     // Clean up and re-initialize.
     viewModelScope.launch(Dispatchers.Default) {
@@ -275,8 +297,14 @@ open class LlmChatViewModelBase() : ChatViewModel() {
   }
 }
 
-@HiltViewModel class LlmChatViewModel @Inject constructor() : LlmChatViewModelBase()
+@HiltViewModel
+class LlmChatViewModel @Inject constructor(dataStoreRepository: DataStoreRepository) :
+  LlmChatViewModelBase(dataStoreRepository)
 
-@HiltViewModel class LlmAskImageViewModel @Inject constructor() : LlmChatViewModelBase()
+@HiltViewModel
+class LlmAskImageViewModel @Inject constructor(dataStoreRepository: DataStoreRepository) :
+  LlmChatViewModelBase(dataStoreRepository)
 
-@HiltViewModel class LlmAskAudioViewModel @Inject constructor() : LlmChatViewModelBase()
+@HiltViewModel
+class LlmAskAudioViewModel @Inject constructor(dataStoreRepository: DataStoreRepository) :
+  LlmChatViewModelBase(dataStoreRepository)

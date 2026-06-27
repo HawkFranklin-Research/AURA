@@ -1,0 +1,9 @@
+AURA 1.0.4 (Nimbo update)
+
+What's new:
+- Refreshed "Nimbo" look and friendlier onboarding.
+- Chat history: your conversations are now saved locally on your device.
+- Improved model picker with clearer text vs. vision model handling.
+- Various UI polish and stability improvements.
+
+All inference still runs on-device. No account needed.

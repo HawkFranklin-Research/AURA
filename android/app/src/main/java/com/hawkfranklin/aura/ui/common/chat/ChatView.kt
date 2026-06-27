@@ -30,35 +30,25 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AddComment
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -75,8 +65,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.hawkfranklin.aura.R
 import com.hawkfranklin.aura.data.Model
@@ -139,6 +127,8 @@ fun ChatView(
     }
   }
 
+  LaunchedEffect(Unit) { viewModel.loadChatSessions() }
+
   // Initialize model when model/download state changes.
   val curDownloadStatus = modelManagerUiState.modelDownloadStatus[selectedModel.name]
   LaunchedEffect(curDownloadStatus, selectedModel.name) {
@@ -168,19 +158,34 @@ fun ChatView(
   ModalNavigationDrawer(
     drawerState = drawerState,
     drawerContent = {
-      ChatHistoryDrawerContent(
-        history = modelManagerUiState.textInputHistory,
-        onNewChatClicked = {
-          scope.launch { drawerState.close() }
-          if (!uiState.inProgress) {
-            onResetSessionClicked(selectedModel)
-          }
-        },
-        onHistoryItemClicked = { item ->
-          scope.launch { drawerState.close() }
-          onSendMessage(selectedModel, listOf(ChatMessageText(content = item, side = ChatSide.USER)))
-        },
-      )
+      ModalDrawerSheet {
+        ChatHistorySideSheetContent(
+          history = uiState.chatSessions.filter { it.taskId == task.id },
+          onNewChatClicked = {
+            scope.launch { drawerState.close() }
+            if (!uiState.inProgress) {
+              onResetSessionClicked(selectedModel)
+            }
+          },
+          onHistoryItemClicked = { sessionId ->
+            scope.launch { drawerState.close() }
+            if (!uiState.inProgress) {
+              val session = uiState.chatSessions.firstOrNull { it.sessionId == sessionId }
+              val sessionModel =
+                task.models.firstOrNull { it.name == session?.originalModel } ?: selectedModel
+              if (sessionModel.name != selectedModel.name) {
+                modelManagerViewModel.selectModel(model = sessionModel)
+              }
+              viewModel.loadSession(sessionId = sessionId, model = sessionModel)
+            }
+          },
+          onHistoryItemDeleted = { sessionId ->
+            viewModel.deleteSession(context = context, sessionId = sessionId)
+          },
+          onHistoryItemsDeleteAll = { viewModel.clearSessions(context = context) },
+          onDismissed = { scope.launch { drawerState.close() } },
+        )
+      }
     },
   ) {
     Scaffold(
@@ -309,61 +314,6 @@ fun ChatView(
         }
       }
     }
-    }
-  }
-}
-
-@Composable
-private fun ChatHistoryDrawerContent(
-  history: List<String>,
-  onNewChatClicked: () -> Unit,
-  onHistoryItemClicked: (String) -> Unit,
-) {
-  ModalDrawerSheet {
-    Column(
-      modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 28.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-      Text(
-        text = stringResource(R.string.app_name),
-        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
-      )
-      TextButton(onClick = onNewChatClicked, modifier = Modifier.fillMaxWidth()) {
-        Icon(Icons.Rounded.AddComment, contentDescription = null)
-        Text("New chat", modifier = Modifier.padding(start = 8.dp))
-      }
-      HorizontalDivider()
-      Text(
-        text = "Recents",
-        style = MaterialTheme.typography.titleMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-      )
-      if (history.isEmpty()) {
-        Text(
-          text = "Your recent prompts will appear here.",
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-      } else {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-          items(history, key = { it }) { item ->
-            Text(
-              text = item,
-              maxLines = 2,
-              overflow = TextOverflow.Ellipsis,
-              style = MaterialTheme.typography.bodyLarge,
-              modifier =
-                Modifier.fillMaxWidth()
-                  .clickable { onHistoryItemClicked(item) }
-                  .background(
-                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                    shape = RoundedCornerShape(16.dp),
-                  )
-                  .padding(horizontal = 14.dp, vertical = 12.dp),
-            )
-          }
-        }
-      }
     }
   }
 }

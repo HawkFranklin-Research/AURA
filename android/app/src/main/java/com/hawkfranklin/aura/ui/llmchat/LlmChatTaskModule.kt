@@ -19,6 +19,7 @@ package com.hawkfranklin.aura.ui.llmchat
 import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
+import androidx.compose.material.icons.outlined.GraphicEq
 import androidx.compose.material.icons.outlined.ImageSearch
 import androidx.compose.runtime.Composable
 import com.hawkfranklin.aura.R
@@ -151,4 +152,61 @@ internal object LlmAskImageModule {
   }
 }
 
-// Ask audio task removed for AURA scope.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ask audio.
+
+class LlmAskAudioTask @Inject constructor() : CustomTask {
+  override val task: Task =
+    Task(
+      id = BuiltInTaskId.LLM_ASK_AUDIO,
+      label = "Scribe",
+      category = Category.LLM,
+      icon = Icons.Outlined.GraphicEq,
+      models = mutableListOf(),
+      description = "Transcribe or translate voice notes",
+      textInputPlaceHolderRes = R.string.text_input_placeholder_llm_chat,
+    )
+
+  override fun initializeModelFn(
+    context: Context,
+    coroutineScope: CoroutineScope,
+    model: Model,
+    onDone: (String) -> Unit,
+  ) {
+    LlmChatModelHelper.initialize(
+      context = context,
+      model = model,
+      supportImage = false,
+      supportAudio = true,
+      onDone = onDone,
+    )
+  }
+
+  override fun cleanUpModelFn(
+    context: Context,
+    coroutineScope: CoroutineScope,
+    model: Model,
+    onDone: () -> Unit,
+  ) {
+    LlmChatModelHelper.cleanUp(model = model, onDone = onDone)
+  }
+
+  @Composable
+  override fun MainScreen(data: Any) {
+    val myData = data as CustomTaskDataForBuiltinTask
+    LlmAskAudioScreen(
+      modelManagerViewModel = myData.modelManagerViewModel,
+      navigateUp = myData.onNavUp,
+    )
+  }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+internal object LlmAskAudioModule {
+  @Provides
+  @IntoSet
+  fun provideTask(): CustomTask {
+    return LlmAskAudioTask()
+  }
+}

@@ -16,10 +16,15 @@
 
 package com.hawkfranklin.aura.ui.common.chat
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.hawkfranklin.aura.common.processLlmResponse
+import com.hawkfranklin.aura.data.DataStoreRepository
 import com.hawkfranklin.aura.data.Model
+import com.hawkfranklin.aura.data.Task
+import com.hawkfranklin.aura.proto.ChatSessionProto
+import java.util.UUID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -49,12 +54,27 @@ data class ChatUiState(
    * showing the stats below it.
    */
   val showingStatsByModel: Map<String, MutableSet<ChatMessage>> = mapOf(),
+
+  /** Persisted chat sessions, newest first. */
+  val chatSessions: List<ChatSessionProto> = listOf(),
+
+  /** A map of model names to active persisted session ids. */
+  val currentSessionIdByModel: Map<String, String> = mapOf(),
+
+  /** Models whose visible chat was restored and should replay text context on the next send. */
+  val restoredContextModelNames: Set<String> = setOf(),
 )
 
 /** ViewModel responsible for managing the chat UI state and handling chat-related operations. */
-abstract class ChatViewModel() : ViewModel() {
+abstract class ChatViewModel(private val dataStoreRepository: DataStoreRepository? = null) :
+  ViewModel() {
   private val _uiState = MutableStateFlow(createUiState())
   val uiState = _uiState.asStateFlow()
+
+  fun loadChatSessions() {
+    dataStoreRepository ?: return
+    _uiState.update { it.copy(chatSessions = dataStoreRepository.readChatSessions()) }
+  }
 
   fun addMessage(model: Model, message: ChatMessage) {
     val newMessagesByModel = _uiState.value.messagesByModel.toMutableMap()
@@ -107,6 +127,124 @@ abstract class ChatViewModel() : ViewModel() {
     val newMessagesByModel = _uiState.value.messagesByModel.toMutableMap()
     newMessagesByModel[model.name] = mutableListOf()
     _uiState.update { _uiState.value.copy(messagesByModel = newMessagesByModel) }
+  }
+
+  fun startNewSession(model: Model) {
+    val newMessagesByModel = _uiState.value.messagesByModel.toMutableMap()
+    val newSessionIdByModel = _uiState.value.currentSessionIdByModel.toMutableMap()
+    newMessagesByModel[model.name] = mutableListOf()
+    newSessionIdByModel[model.name] = UUID.randomUUID().toString()
+    _uiState.update {
+      it.copy(
+        messagesByModel = newMessagesByModel,
+        currentSessionIdByModel = newSessionIdByModel,
+        restoredContextModelNames = it.restoredContextModelNames - model.name,
+      )
+    }
+  }
+
+  fun persistCurrentSession(context: Context, task: Task, model: Model) {
+    dataStoreRepository ?: return
+    val messages = _uiState.value.messagesByModel[model.name]?.toList() ?: listOf()
+    if (messages.isEmpty()) {
+      return
+    }
+    val sessionId = getOrCreateCurrentSessionId(model)
+    val session =
+      buildChatSessionProto(
+        context = context,
+        sessionId = sessionId,
+        task = task,
+        model = model,
+        messages = messages,
+      )
+    dataStoreRepository.upsertChatSession(session)
+    loadChatSessions()
+  }
+
+  fun loadSession(sessionId: String, model: Model) {
+    dataStoreRepository ?: return
+    val session = dataStoreRepository.readChatSessions().firstOrNull { it.sessionId == sessionId }
+      ?: return
+    val newMessagesByModel = _uiState.value.messagesByModel.toMutableMap()
+    val newSessionIdByModel = _uiState.value.currentSessionIdByModel.toMutableMap()
+    newMessagesByModel[model.name] = session.toChatMessages()
+    newSessionIdByModel[model.name] = session.sessionId
+    _uiState.update {
+      it.copy(
+        messagesByModel = newMessagesByModel,
+        currentSessionIdByModel = newSessionIdByModel,
+        chatSessions = dataStoreRepository.readChatSessions(),
+        restoredContextModelNames = it.restoredContextModelNames + model.name,
+      )
+    }
+  }
+
+  fun deleteSession(context: Context, sessionId: String) {
+    dataStoreRepository ?: return
+    dataStoreRepository.deleteChatSession(sessionId)
+    deleteChatSessionAttachments(context = context, sessionId = sessionId)
+    val newMessagesByModel = _uiState.value.messagesByModel.toMutableMap()
+    val newSessionIdByModel = _uiState.value.currentSessionIdByModel.toMutableMap()
+    for ((modelName, activeSessionId) in _uiState.value.currentSessionIdByModel) {
+      if (activeSessionId == sessionId) {
+        newMessagesByModel[modelName] = mutableListOf()
+        newSessionIdByModel[modelName] = UUID.randomUUID().toString()
+      }
+    }
+    _uiState.update {
+      it.copy(
+        messagesByModel = newMessagesByModel,
+        currentSessionIdByModel = newSessionIdByModel,
+        chatSessions = dataStoreRepository.readChatSessions(),
+        restoredContextModelNames = it.restoredContextModelNames - newMessagesByModel.keys,
+      )
+    }
+  }
+
+  fun clearSessions(context: Context) {
+    dataStoreRepository ?: return
+    for (session in dataStoreRepository.readChatSessions()) {
+      deleteChatSessionAttachments(context = context, sessionId = session.sessionId)
+    }
+    dataStoreRepository.clearChatSessions()
+    _uiState.update {
+      it.copy(
+        chatSessions = listOf(),
+        messagesByModel = mapOf(),
+        currentSessionIdByModel = mapOf(),
+        restoredContextModelNames = setOf(),
+      )
+    }
+  }
+
+  fun buildInputWithRestoredContextIfNeeded(model: Model, latestInput: String): String {
+    if (latestInput.isBlank() || !_uiState.value.restoredContextModelNames.contains(model.name)) {
+      return latestInput
+    }
+
+    val transcript =
+      (_uiState.value.messagesByModel[model.name] ?: listOf())
+        .filterIsInstance<ChatMessageText>()
+        .filter { it.content.isNotBlank() }
+        .joinToString("\n") { message ->
+          val speaker = if (message.side == ChatSide.USER) "User" else "Nimbo"
+          "$speaker: ${message.content}"
+        }
+
+    _uiState.update { it.copy(restoredContextModelNames = it.restoredContextModelNames - model.name) }
+
+    if (transcript.isBlank()) {
+      return latestInput
+    }
+
+    return """
+Previous conversation:
+$transcript
+
+Continue the conversation and answer the user's latest request.
+"""
+      .trim()
   }
 
   fun getLastMessage(model: Model): ChatMessage? {
@@ -239,5 +377,17 @@ abstract class ChatViewModel() : ViewModel() {
 
   private fun createUiState(): ChatUiState {
     return ChatUiState()
+  }
+
+  private fun getOrCreateCurrentSessionId(model: Model): String {
+    val existing = _uiState.value.currentSessionIdByModel[model.name]
+    if (!existing.isNullOrBlank()) {
+      return existing
+    }
+    val sessionId = UUID.randomUUID().toString()
+    val newSessionIdByModel = _uiState.value.currentSessionIdByModel.toMutableMap()
+    newSessionIdByModel[model.name] = sessionId
+    _uiState.update { it.copy(currentSessionIdByModel = newSessionIdByModel) }
+    return sessionId
   }
 }

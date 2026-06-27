@@ -22,6 +22,7 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.Serializer
 import androidx.datastore.dataStoreFile
 import com.hawkfranklin.aura.AppLifecycleProvider
+import com.hawkfranklin.aura.ChatHistorySerializer
 import com.hawkfranklin.aura.GalleryLifecycleProvider
 import com.hawkfranklin.aura.SettingsSerializer
 import com.hawkfranklin.aura.UserDataSerializer
@@ -29,6 +30,7 @@ import com.hawkfranklin.aura.data.DataStoreRepository
 import com.hawkfranklin.aura.data.DefaultDataStoreRepository
 import com.hawkfranklin.aura.data.DefaultDownloadRepository
 import com.hawkfranklin.aura.data.DownloadRepository
+import com.hawkfranklin.aura.proto.ChatSessionsProto
 import com.hawkfranklin.aura.proto.Settings
 import com.hawkfranklin.aura.proto.UserData
 import dagger.Module
@@ -54,6 +56,13 @@ internal object AppModule {
   @Singleton
   fun provideUserDataSerializer(): Serializer<UserData> {
     return UserDataSerializer
+  }
+
+  // Provides the ChatHistorySerializer
+  @Provides
+  @Singleton
+  fun provideChatHistorySerializer(): Serializer<ChatSessionsProto> {
+    return ChatHistorySerializer
   }
 
   // Provides DataStore<Settings>
@@ -82,6 +91,19 @@ internal object AppModule {
     )
   }
 
+  // Provides DataStore<ChatSessionsProto>
+  @Provides
+  @Singleton
+  fun provideChatHistoryDataStore(
+    @ApplicationContext context: Context,
+    chatHistorySerializer: Serializer<ChatSessionsProto>,
+  ): DataStore<ChatSessionsProto> {
+    return DataStoreFactory.create(
+      serializer = chatHistorySerializer,
+      produceFile = { context.dataStoreFile("chat_history.pb") },
+    )
+  }
+
   // Provides AppLifecycleProvider
   @Provides
   @Singleton
@@ -95,8 +117,9 @@ internal object AppModule {
   fun provideDataStoreRepository(
     dataStore: DataStore<Settings>,
     userDataDataStore: DataStore<UserData>,
+    chatHistoryDataStore: DataStore<ChatSessionsProto>,
   ): DataStoreRepository {
-    return DefaultDataStoreRepository(dataStore, userDataDataStore)
+    return DefaultDataStoreRepository(dataStore, userDataDataStore, chatHistoryDataStore)
   }
 
   // Provides DownloadRepository

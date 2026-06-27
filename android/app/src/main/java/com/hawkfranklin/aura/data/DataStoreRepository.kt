@@ -18,6 +18,8 @@ package com.hawkfranklin.aura.data
 
 import androidx.datastore.core.DataStore
 import com.hawkfranklin.aura.proto.AccessTokenData
+import com.hawkfranklin.aura.proto.ChatSessionProto
+import com.hawkfranklin.aura.proto.ChatSessionsProto
 import com.hawkfranklin.aura.proto.ImportedModel
 import com.hawkfranklin.aura.proto.Settings
 import com.hawkfranklin.aura.proto.Theme
@@ -45,6 +47,14 @@ interface DataStoreRepository {
 
   fun readImportedModels(): List<ImportedModel>
 
+  fun readChatSessions(): List<ChatSessionProto>
+
+  fun upsertChatSession(session: ChatSessionProto)
+
+  fun deleteChatSession(sessionId: String)
+
+  fun clearChatSessions()
+
   fun isTosAccepted(): Boolean
 
   fun acceptTos()
@@ -58,6 +68,7 @@ interface DataStoreRepository {
 class DefaultDataStoreRepository(
   private val dataStore: DataStore<Settings>,
   private val userDataDataStore: DataStore<UserData>,
+  private val chatHistoryDataStore: DataStore<ChatSessionsProto>,
 ) : DataStoreRepository {
   override fun saveTextInputHistory(history: List<String>) {
     runBlocking {
@@ -139,6 +150,42 @@ class DefaultDataStoreRepository(
     return runBlocking {
       val settings = dataStore.data.first()
       settings.importedModelList
+    }
+  }
+
+  override fun readChatSessions(): List<ChatSessionProto> {
+    return runBlocking {
+      val chatHistory = chatHistoryDataStore.data.first()
+      chatHistory.sessionsList.sortedByDescending { it.timestampMs }
+    }
+  }
+
+  override fun upsertChatSession(session: ChatSessionProto) {
+    runBlocking {
+      chatHistoryDataStore.updateData { chatHistory ->
+        val sessions =
+          chatHistory.sessionsList
+            .filterNot { it.sessionId == session.sessionId }
+            .toMutableList()
+            .apply { add(session) }
+            .sortedByDescending { it.timestampMs }
+        ChatSessionsProto.newBuilder().addAllSessions(sessions).build()
+      }
+    }
+  }
+
+  override fun deleteChatSession(sessionId: String) {
+    runBlocking {
+      chatHistoryDataStore.updateData { chatHistory ->
+        val sessions = chatHistory.sessionsList.filterNot { it.sessionId == sessionId }
+        ChatSessionsProto.newBuilder().addAllSessions(sessions).build()
+      }
+    }
+  }
+
+  override fun clearChatSessions() {
+    runBlocking {
+      chatHistoryDataStore.updateData { ChatSessionsProto.getDefaultInstance() }
     }
   }
 

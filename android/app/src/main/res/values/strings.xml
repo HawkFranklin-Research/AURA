@@ -97,6 +97,22 @@
   <string name="offline_badge" translatable="false">Offline ready</string>
   <string name="images_supported" translatable="false">Images supported</string>
   <string name="use_vision_model_to_attach_images" translatable="false">Use a vision model to attach images</string>
+  <string name="audio_supported" translatable="false">Audio supported</string>
+  <string name="use_audio_model_to_attach_audio" translatable="false">Use an audio model to attach voice</string>
+  <string name="scribe_task_title" translatable="false">Scribe</string>
+  <string name="scribe_task_description" translatable="false">Transcribe or translate voice notes</string>
+  <string name="askaudio_emptystate_title" translatable="false">Scribe</string>
+  <string name="askaudio_emptystate_content" translatable="false">Record or attach a short voice note, then ask Nimbo to transcribe, translate, or summarize it.</string>
+  <string name="chat_history_title" translatable="false">Chat history</string>
+  <string name="new_chat" translatable="false">New chat</string>
+  <string name="recents" translatable="false">Recents</string>
+  <string name="clear_all" translatable="false">Clear all</string>
+  <string name="chat_history_empty" translatable="false">Your saved chats will appear here.</string>
+  <string name="chat_history_local_notice" translatable="false">Saved on this device.</string>
+  <string name="clear_history_dialog_title" translatable="false">Clear history?</string>
+  <string name="clear_history_dialog_content" translatable="false">This will delete all saved chats on this device.</string>
+  <string name="delete_chat_dialog_title" translatable="false">Delete chat?</string>
+  <string name="delete_chat_dialog_content" translatable="false">This saved chat will be removed from this device.</string>
   <string name="starter_prompt_summarize" translatable="false">Summarize this</string>
   <string name="starter_prompt_explain" translatable="false">Explain simply</string>
   <string name="starter_prompt_draft" translatable="false">Draft a message</string>

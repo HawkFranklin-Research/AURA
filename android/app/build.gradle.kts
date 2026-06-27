@@ -48,8 +48,8 @@ android {
     applicationId = "com.hawkfranklin.aura"
     minSdk = 31
     targetSdk = 35
-    versionCode = 21
-    versionName = "1.0.3"
+    versionCode = 22
+    versionName = "1.0.4"
 
     // Needed for HuggingFace auth workflows.
     // Use the scheme of the "Redirect URLs" in HuggingFace app.

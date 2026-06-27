@@ -24,6 +24,9 @@ android/app/build/outputs/bundle/release/*
 android/keystore
 android/keystore.properties
 *.keystore
+*.jks
+upload_certificate.pem
+SIGNING_KEY_INFO.md
 android-capacitor-old.tar.gz
 
 # Editor directories and files

@@ -573,10 +573,7 @@ fun ChatPanel(
             verticalArrangement = Arrangement.Center,
           ) {
             MessageBodyInfo(
-              ChatMessageInfo(
-                content =
-                  "To get started, tap the + icon to add your audio clip. Limited to 1 clip up to 30 seconds long."
-              ),
+              ChatMessageInfo(content = stringResource(R.string.askaudio_emptystate_content)),
               smallFontSize = false,
             )
           }
@@ -626,8 +623,8 @@ fun ChatPanel(
           task.id === BuiltInTaskId.LLM_CHAT || task.id === BuiltInTaskId.LLM_ASK_IMAGE,
         enableImagePickerMenuItems = selectedModel.llmSupportImage,
         showAudioItemsInMenu =
-          selectedModel.llmSupportAudio &&
             (task.id === BuiltInTaskId.LLM_CHAT || task.id === BuiltInTaskId.LLM_ASK_AUDIO),
+        enableAudioMenuItems = selectedModel.llmSupportAudio,
         showStopButtonWhenInProgress = showStopButtonInInputWhenInProgress,
       )
     }

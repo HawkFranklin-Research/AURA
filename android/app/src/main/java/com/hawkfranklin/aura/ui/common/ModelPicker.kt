@@ -141,6 +141,13 @@ fun ModelPicker(
                 style = labelSmallNarrow.copy(lineHeight = 10.sp),
               )
             }
+            if (model.llmSupportAudio) {
+              Text(
+                text = "- ${stringResource(R.string.audio_supported)}",
+                color = MaterialTheme.colorScheme.primary,
+                style = labelSmallNarrow.copy(lineHeight = 10.sp),
+              )
+            }
           }
         }
         if (selected) {

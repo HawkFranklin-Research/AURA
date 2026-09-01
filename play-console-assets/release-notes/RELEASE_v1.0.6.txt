@@ -1,0 +1,40 @@
+==================================================
+GOOGLE PLAY CONSOLE - PRODUCTION RELEASE DETAILS (v1.0.6)
+==================================================
+
+1. APP BUNDLE TO UPLOAD:
+   File Path: ~/Downloads/AURA-Play-Release-v1.0.6/app-release.aab
+   (or ~/Downloads/AURA-Play-Release-v1.0.6/AURA-v1.0.6-release-bundle.aab)
+   Version Name: 1.0.6
+   Version Code: 24
+   Target SDK: 36 (Android 16)
+   Min SDK: 31 (Android 12)
+
+--------------------------------------------------
+2. RELEASE NAME (Copy & Paste below):
+--------------------------------------------------
+1.0.6 (24) - Android 16 & On-Device AI
+
+--------------------------------------------------
+3. RELEASE NOTES (Copy & Paste below):
+--------------------------------------------------
+<en-US>
+• Target API 36 update for full Android 16 compatibility.
+• Refreshed app icon and refined visual branding.
+• Faster on-device inference with optimized LiteRT runtime.
+• Enhanced offline chat session history and model management.
+• Improved memory efficiency and stability fixes.
+</en-US>
+
+--------------------------------------------------
+4. STORE LISTING ASSETS INCLUDED IN THIS FOLDER:
+--------------------------------------------------
+- App Icon (512x512 PNG): app-icon-512/aura-icon-512.png
+- High-Res Logo: app-icon-512/aura-logo-high-res-transparent.png
+- Store Screenshots:
+  * 01-home-interface.png (Main chat screen with suggestions)
+  * 02-model-selection.png (Model picker sheet)
+  * 03-chat-history.png (Local chat history drawer)
+  * 04-fast-inference-hello.png (Live on-device response)
+  * 05-story-generation.png (Multi-turn generation)
+  * 06-about-and-privacy.png (Settings and privacy information)

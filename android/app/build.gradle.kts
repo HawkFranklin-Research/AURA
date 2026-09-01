@@ -42,14 +42,14 @@ val hasReleaseKeystore =
 
 android {
   namespace = "com.hawkfranklin.aura"
-  compileSdk = 35
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.hawkfranklin.aura"
     minSdk = 31
-    targetSdk = 35
-    versionCode = 22
-    versionName = "1.0.4"
+    targetSdk = 36
+    versionCode = 23
+    versionName = "1.0.5"
 
     // Needed for HuggingFace auth workflows.
     // Use the scheme of the "Redirect URLs" in HuggingFace app.

@@ -26,6 +26,7 @@ android/keystore.properties
 *.keystore
 *.jks
 upload_certificate.pem
+upload_certificate.der
 SIGNING_KEY_INFO.md
 android-capacitor-old.tar.gz
 

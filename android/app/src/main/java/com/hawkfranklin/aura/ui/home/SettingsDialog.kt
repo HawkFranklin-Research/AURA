@@ -155,20 +155,20 @@ fun SettingsDialog(
             verticalArrangement = Arrangement.spacedBy(4.dp),
           ) {
             Text(
-              "What is Nimbo?",
+              "What is AURA?",
               style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
             )
             Text(
-              "Your AI, in your pocket, on or offline.",
+              "Your private AI, in your pocket, on or offline.",
               style = MaterialTheme.typography.bodyMedium,
             )
             Text(
-              "Nimbo runs open-source AI models directly on your phone. Download a model once, then chat, ask, and test prompts even when the internet is unavailable.",
+              "AURA runs open-source AI models directly on your phone. Download a model once, then chat, ask, and test prompts even when the internet is unavailable.",
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-              "Previously AURA. Built by HawkFranklin Research.",
+              "Developed by HawkFranklin Research.",
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -378,7 +378,7 @@ fun SettingsDialog(
               "Exit",
               style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
             )
-            OutlinedButton(onClick = { showExitConfirm = true }) { Text("Exit Nimbo") }
+            OutlinedButton(onClick = { showExitConfirm = true }) { Text("Exit AURA") }
           }
         }
 
@@ -401,7 +401,7 @@ fun SettingsDialog(
   if (showExitConfirm) {
     AlertDialog(
       onDismissRequest = { showExitConfirm = false },
-      title = { Text("Exit Nimbo") },
+      title = { Text("Exit AURA") },
       text = { Text("Close the app for now?") },
       confirmButton = {
         Button(

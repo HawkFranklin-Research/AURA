@@ -228,7 +228,7 @@ abstract class ChatViewModel(private val dataStoreRepository: DataStoreRepositor
         .filterIsInstance<ChatMessageText>()
         .filter { it.content.isNotBlank() }
         .joinToString("\n") { message ->
-          val speaker = if (message.side == ChatSide.USER) "User" else "Nimbo"
+          val speaker = if (message.side == ChatSide.USER) "User" else "AURA"
           "$speaker: ${message.content}"
         }
 

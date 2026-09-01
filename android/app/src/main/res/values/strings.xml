@@ -16,9 +16,9 @@
 
 <resources>
   <!-- TODO(jingjin): Add translation support when i18n is ready. -->
-  <string name="app_name" translatable="false">Nimbo</string>
-  <string name="app_name_first_part" translatable="false">Nimbo</string>
-  <string name="app_name_second_part" translatable="false">POCKET OFFLINE AI</string>
+  <string name="app_name" translatable="false">AURA</string>
+  <string name="app_name_first_part" translatable="false">AURA</string>
+  <string name="app_name_second_part" translatable="false">PRIVATE LOCAL AI</string>
   <string name="app_tagline" translatable="false">The AI that doesn\'t need the internet.</string>
   <string name="app_intro" translatable="false">Your private AI. On or offline.</string>
   <string name="best_overall" translatable="false">Best overall</string>
@@ -52,9 +52,9 @@
   <string name="notification_content_fail" translatable="false">Failed to download model \"%s\"</string>
   <string name="chat_textinput_placeholder" translatable="false">Ask anything…</string>
   <string name="chat_you" translatable="false">You</string>
-  <string name="chat_llm_agent_name" translatable="false">Nimbo</string>
+  <string name="chat_llm_agent_name" translatable="false">AURA</string>
   <string name="chat_agent_agent_name" translatable="false">Agent</string>
-  <string name="chat_generic_agent_name" translatable="false">Nimbo</string>
+  <string name="chat_generic_agent_name" translatable="false">AURA</string>
   <string name="chat_generic_result_name" translatable="false">Result</string>
   <string name="learn_more" translatable="false">Learn more</string>
   <string name="litert_community_label" translatable="false">Browse AI models</string>
@@ -73,7 +73,7 @@
   <string name="text_input_placeholder_text_classification" translatable="false">Type movie review to classify…</string>
   <string name="text_image_generation_text_field_placeholder" translatable="false">Ask anything…</string>
   <string name="text_input_placeholder_llm_chat" translatable="false">Ask anything…</string>
-  <string name="tos_dialog_title" translatable="false">Welcome to Nimbo</string>
+  <string name="tos_dialog_title" translatable="false">Welcome to AURA</string>
   <string name="tos_dialog_view_accept_button_label" translatable="false">Get started</string>
   <string name="tos_dialog_next_button_label" translatable="false">Next</string>
   <string name="tos_dialog_page_1_title" translatable="false">AI that lives on your phone</string>
@@ -102,7 +102,7 @@
   <string name="scribe_task_title" translatable="false">Scribe</string>
   <string name="scribe_task_description" translatable="false">Transcribe or translate voice notes</string>
   <string name="askaudio_emptystate_title" translatable="false">Scribe</string>
-  <string name="askaudio_emptystate_content" translatable="false">Record or attach a short voice note, then ask Nimbo to transcribe, translate, or summarize it.</string>
+  <string name="askaudio_emptystate_content" translatable="false">Record or attach a short voice note, then ask AURA to transcribe, translate, or summarize it.</string>
   <string name="chat_history_title" translatable="false">Chat history</string>
   <string name="new_chat" translatable="false">New chat</string>
   <string name="recents" translatable="false">Recents</string>

@@ -18,7 +18,7 @@ package com.hawkfranklin.aura.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Aura palette (gold + cyan on deep-void) -> Updated for Nimbo brand (terracotta + cream)
+// AURA vibrant terracotta & ember-gold palette
 val primaryLight = Color(0xFFCD410B)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFFFECE7)

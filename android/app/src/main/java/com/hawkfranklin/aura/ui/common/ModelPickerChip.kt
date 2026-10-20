@@ -76,6 +76,7 @@ fun ModelPickerChip(
   initialModel: Model,
   modelManagerViewModel: ModelManagerViewModel,
   onModelSelected: (prev: Model, cur: Model) -> Unit,
+  onOpenModelPicker: (() -> Unit)? = null,
 ) {
   var showModelPicker by remember { mutableStateOf(false) }
   var modelPickerModel by remember { mutableStateOf<Model?>(null) }
@@ -104,8 +105,8 @@ fun ModelPickerChip(
           Modifier.clip(CircleShape)
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .clickable(enabled = enabled) {
-              modelPickerModel = initialModel
-              showModelPicker = true
+              if (onOpenModelPicker != null) onOpenModelPicker()
+              else { modelPickerModel = initialModel; showModelPicker = true }
             }
             .padding(start = 8.dp, end = 2.dp)
             .padding(vertical = 4.dp)

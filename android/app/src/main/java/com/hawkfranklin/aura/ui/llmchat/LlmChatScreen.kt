@@ -19,7 +19,11 @@ package com.hawkfranklin.aura.ui.llmchat
 import androidx.hilt.navigation.compose.hiltViewModel
 
 import android.graphics.Bitmap
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.hawkfranklin.aura.ui.openrouter.*
+import kotlinx.coroutines.launch
+import com.hawkfranklin.aura.proto.ChatSessionProto
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.os.bundleOf
@@ -38,12 +42,61 @@ fun LlmChatScreen(
   modifier: Modifier = Modifier,
   viewModel: LlmChatViewModel = hiltViewModel(),
 ) {
-  ChatViewWrapper(
-    viewModel = viewModel,
-    modelManagerViewModel = modelManagerViewModel,
-    taskId = BuiltInTaskId.LLM_CHAT,
-    navigateUp = navigateUp,
-    modifier = modifier,
+  val online: OpenRouterChatViewModel = hiltViewModel()
+  var onlineMode by rememberSaveable { mutableStateOf(false) }
+  var showPicker by remember { mutableStateOf(false) }
+  val managerState by modelManagerViewModel.uiState.collectAsState()
+  val context = LocalContext.current
+  val scope = rememberCoroutineScope()
+  val task = modelManagerViewModel.getTaskById(BuiltInTaskId.LLM_CHAT) ?: return
+  val restoreLocal: (ChatSessionProto) -> Unit = { session ->
+    val model = task.models.firstOrNull { it.name == session.originalModel }
+    if (model != null) {
+      LlmChatModelHelper.resetConversation(model, model.llmSupportImage, model.llmSupportAudio)
+      modelManagerViewModel.selectModel(model)
+      viewModel.loadSession(session.sessionId, model)
+      onlineMode = false
+    } else android.widget.Toast.makeText(context, "The original local model is unavailable.", android.widget.Toast.LENGTH_LONG).show()
+  }
+  if (onlineMode) {
+    OpenRouterChatScreen(online, onChooseModel = { showPicker = true }, onLocalSession = restoreLocal,
+      onUseLocal = { showPicker = true })
+  } else {
+    ChatViewWrapper(
+      viewModel = viewModel, modelManagerViewModel = modelManagerViewModel,
+      taskId = BuiltInTaskId.LLM_CHAT, navigateUp = navigateUp, modifier = modifier,
+      onOpenModelPicker = { showPicker = true },
+      onOnlineSession = { online.load(it); onlineMode = true },
+    )
+  }
+  if (showPicker) ChatModelPicker(
+    task = task, modelManager = modelManagerViewModel, online = online,
+    onLocal = { model ->
+      showPicker = false
+      val sameLocalTarget = !onlineMode && managerState.selectedModel.name == model.name
+      scope.launch {
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
+          modelManagerViewModel.cleanupModel(context, task, managerState.selectedModel)
+        }
+        // Selecting another target starts a new local chat; no online transcript is transferred.
+        viewModel.startNewSession(model)
+        modelManagerViewModel.selectModel(model)
+        onlineMode = false
+        // A different target is initialized by ChatView's download effect. Same-name selection
+        // does not change that effect's key, so only that case needs an explicit initialization.
+        if (sameLocalTarget && managerState.modelDownloadStatus[model.name]?.status ==
+          com.hawkfranklin.aura.data.ModelDownloadStatusType.SUCCEEDED) {
+          modelManagerViewModel.initializeModel(context, task, model)
+        }
+      }
+    },
+    onOnline = { model ->
+      showPicker = false
+      scope.launch(kotlinx.coroutines.Dispatchers.Default) {
+        modelManagerViewModel.cleanupModel(context, task, managerState.selectedModel)
+      }
+      online.select(model); onlineMode = true
+    }, onDismiss = { showPicker = false },
   )
 }
 
@@ -86,11 +139,16 @@ fun ChatViewWrapper(
   taskId: String,
   navigateUp: () -> Unit,
   modifier: Modifier = Modifier,
+  onOpenModelPicker: (() -> Unit)? = null,
+  onOnlineSession: ((ChatSessionProto) -> Unit)? = null,
 ) {
   val context = LocalContext.current
   val task = modelManagerViewModel.getTaskById(id = taskId)!!
+  val persistenceScope = rememberCoroutineScope()
 
   ChatView(
+    onOpenModelPicker = onOpenModelPicker,
+    onOnlineSession = onOnlineSession,
     task = task,
     viewModel = viewModel,
     modelManagerViewModel = modelManagerViewModel,
@@ -161,7 +219,12 @@ fun ChatViewWrapper(
     },
     onResetSessionClicked = { model -> viewModel.resetSession(task = task, model = model) },
     showStopButtonInInputWhenInProgress = true,
-    onStopButtonClicked = { model -> viewModel.stopResponse(model = model) },
+    onStopButtonClicked = { model ->
+      viewModel.stopResponse(model = model)
+      persistenceScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+        viewModel.persistCurrentSession(context, task, model)
+      }
+    },
     navigateUp = navigateUp,
     modifier = modifier,
   )

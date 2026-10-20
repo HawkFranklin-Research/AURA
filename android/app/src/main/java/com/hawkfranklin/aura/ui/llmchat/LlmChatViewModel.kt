@@ -38,6 +38,9 @@ import com.hawkfranklin.aura.ui.modelmanager.ModelManagerViewModel
 import com.google.ai.edge.litertlm.ExperimentalApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import com.hawkfranklin.aura.data.chat.GenerationFence
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,6 +56,21 @@ private val STATS =
 
 open class LlmChatViewModelBase(dataStoreRepository: DataStoreRepository) :
   ChatViewModel(dataStoreRepository) {
+  private val generationFence = GenerationFence()
+  private var preparationJob: Job? = null
+
+  override fun startNewSession(model: Model) {
+    generationFence.invalidate()
+    preparationJob?.cancel()
+    super.startNewSession(model)
+  }
+
+  override fun loadSession(sessionId: String, model: Model) {
+    generationFence.invalidate()
+    preparationJob?.cancel()
+    super.loadSession(sessionId, model)
+  }
+
   fun generateResponse(
     context: Context,
     task: Task,
@@ -62,19 +80,30 @@ open class LlmChatViewModelBase(dataStoreRepository: DataStoreRepository) :
     audioMessages: List<ChatMessageAudioClip> = listOf(),
     onError: (String) -> Unit,
   ) {
+    if (uiState.value.inProgress) return
+    val generation = generationFence.next()
+    setInProgress(true)
+    setPreparing(true)
     val accelerator = model.getStringConfigValue(key = ConfigKeys.ACCELERATOR, defaultValue = "")
-    viewModelScope.launch(Dispatchers.Default) {
-      setInProgress(true)
-      setPreparing(true)
+    preparationJob = viewModelScope.launch(Dispatchers.Default) {
 
       // Loading.
       addMessage(model = model, message = ChatMessageLoading(accelerator = accelerator))
 
       // Wait for instance to be initialized.
-      while (model.instance == null) {
-        delay(100)
+      val initialized = withTimeoutOrNull(60_000) {
+        while (model.instance == null) delay(100)
+        true
+      } ?: false
+      if (!initialized) {
+        if (generationFence.accepts(generation)) {
+          setInProgress(false); setPreparing(false)
+          onError("Local model initialization timed out. Try again or choose another model.")
+        }
+        return@launch
       }
       delay(500)
+      if (!generationFence.accepts(generation)) return@launch
 
       // Run inference.
       val instance = model.instance as LlmModelInstance
@@ -102,7 +131,8 @@ open class LlmChatViewModelBase(dataStoreRepository: DataStoreRepository) :
           input = inputForModel,
           images = images,
           audioClips = audioClips,
-          resultListener = { partialResult, done ->
+          resultListener = result@{ partialResult, done ->
+            if (!generationFence.accepts(generation)) return@result
             val curTs = System.currentTimeMillis()
 
             if (firstRun) {
@@ -169,12 +199,14 @@ open class LlmChatViewModelBase(dataStoreRepository: DataStoreRepository) :
               }
             }
           },
-          cleanUpListener = {
+          cleanUpListener = cleanup@{
+            if (!generationFence.accepts(generation)) return@cleanup
             setInProgress(false)
             setPreparing(false)
             persistCurrentSession(context = context, task = task, model = model)
           },
-          onError = { message ->
+          onError = failure@{ message ->
+            if (!generationFence.accepts(generation)) return@failure
             Log.e(TAG, "Error occurred while running inference")
             setInProgress(false)
             setPreparing(false)
@@ -182,6 +214,7 @@ open class LlmChatViewModelBase(dataStoreRepository: DataStoreRepository) :
           },
         )
       } catch (e: Exception) {
+        if (!generationFence.accepts(generation)) return@launch
         Log.e(TAG, "Error occurred while running inference", e)
         setInProgress(false)
         setPreparing(false)
@@ -191,13 +224,16 @@ open class LlmChatViewModelBase(dataStoreRepository: DataStoreRepository) :
   }
 
   fun stopResponse(model: Model) {
+    generationFence.invalidate()
+    preparationJob?.cancel()
+    setPreparing(false)
     Log.d(TAG, "Stopping response for model ${model.name}...")
     if (getLastMessage(model = model) is ChatMessageLoading) {
       removeLastMessage(model = model)
     }
     setInProgress(false)
-    val instance = model.instance as LlmModelInstance
-    instance.conversation.cancelProcess()
+    val instance = model.instance as? LlmModelInstance
+    instance?.conversation?.cancelProcess()
     Log.d(TAG, "Done stopping response")
   }
 

@@ -71,6 +71,15 @@ abstract class ChatViewModel(private val dataStoreRepository: DataStoreRepositor
   private val _uiState = MutableStateFlow(createUiState())
   val uiState = _uiState.asStateFlow()
 
+  suspend fun renameSession(id: String, title: String) {
+    val repository = dataStoreRepository ?: return
+    val sessions = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+      repository.renameChatSession(id, title)
+      repository.readChatSessions()
+    }
+    _uiState.update { it.copy(chatSessions = sessions) }
+  }
+
   fun loadChatSessions() {
     dataStoreRepository ?: return
     _uiState.update { it.copy(chatSessions = dataStoreRepository.readChatSessions()) }
@@ -129,7 +138,7 @@ abstract class ChatViewModel(private val dataStoreRepository: DataStoreRepositor
     _uiState.update { _uiState.value.copy(messagesByModel = newMessagesByModel) }
   }
 
-  fun startNewSession(model: Model) {
+  open fun startNewSession(model: Model) {
     val newMessagesByModel = _uiState.value.messagesByModel.toMutableMap()
     val newSessionIdByModel = _uiState.value.currentSessionIdByModel.toMutableMap()
     newMessagesByModel[model.name] = mutableListOf()
@@ -162,7 +171,7 @@ abstract class ChatViewModel(private val dataStoreRepository: DataStoreRepositor
     loadChatSessions()
   }
 
-  fun loadSession(sessionId: String, model: Model) {
+  open fun loadSession(sessionId: String, model: Model) {
     dataStoreRepository ?: return
     val session = dataStoreRepository.readChatSessions().firstOrNull { it.sessionId == sessionId }
       ?: return

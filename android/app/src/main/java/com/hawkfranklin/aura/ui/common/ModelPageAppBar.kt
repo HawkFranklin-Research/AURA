@@ -69,6 +69,7 @@ fun ModelPageAppBar(
   inProgress: Boolean,
   modelPreparing: Boolean,
   modifier: Modifier = Modifier,
+  onOpenModelPicker: (() -> Unit)? = null,
   isResettingSession: Boolean = false,
   onResetSessionClicked: (Model) -> Unit = {},
   canShowResetSessionButton: Boolean = false,
@@ -122,6 +123,7 @@ fun ModelPageAppBar(
             initialModel = model,
             modelManagerViewModel = modelManagerViewModel,
             onModelSelected = onModelSelected,
+            onOpenModelPicker = onOpenModelPicker,
           )
         }
       }

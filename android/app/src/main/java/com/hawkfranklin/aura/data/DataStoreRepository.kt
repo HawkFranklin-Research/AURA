@@ -51,6 +51,8 @@ interface DataStoreRepository {
 
   fun upsertChatSession(session: ChatSessionProto)
 
+  fun renameChatSession(sessionId: String, title: String)
+
   fun deleteChatSession(sessionId: String)
 
   fun clearChatSessions()
@@ -167,9 +169,25 @@ class DefaultDataStoreRepository(
           chatHistory.sessionsList
             .filterNot { it.sessionId == session.sessionId }
             .toMutableList()
-            .apply { add(session) }
+            .apply {
+              val existing = chatHistory.sessionsList.firstOrNull { it.sessionId == session.sessionId }
+              add(com.hawkfranklin.aura.data.chat.ChatHistoryTools.preserveTitle(session, existing))
+            }
             .sortedByDescending { it.timestampMs }
         ChatSessionsProto.newBuilder().addAllSessions(sessions).build()
+      }
+    }
+  }
+
+  override fun renameChatSession(sessionId: String, title: String) {
+    val clean = title.trim().take(80)
+    require(clean.isNotEmpty())
+    runBlocking {
+      chatHistoryDataStore.updateData { history ->
+        check(history.sessionsList.any { it.sessionId == sessionId }) { "Conversation no longer exists" }
+        history.toBuilder().clearSessions().addAllSessions(history.sessionsList.map {
+          if (it.sessionId == sessionId) it.toBuilder().setTitle(clean).setCustomTitle(clean).build() else it
+        }).build()
       }
     }
   }

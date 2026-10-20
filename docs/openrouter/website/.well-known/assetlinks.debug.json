@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.hawkfranklin.aura.debug",
+      "sha256_cert_fingerprints": ["5A:F1:58:10:3C:EC:47:4B:4B:55:9C:BC:C0:3D:BE:7A:04:A4:22:3B:96:B1:E5:33:F8:70:09:56:31:24:56:4B"]
+    }
+  }
+]

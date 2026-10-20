@@ -217,9 +217,7 @@ object LlmChatModelHelper {
     val instance = model.instance as LlmModelInstance
 
     // Set listener.
-    if (!cleanUpListeners.containsKey(model.name)) {
-      cleanUpListeners[model.name] = cleanUpListener
-    }
+    cleanUpListeners[model.name] = cleanUpListener
 
     val conversation = instance.conversation
 

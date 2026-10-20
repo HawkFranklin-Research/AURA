@@ -21,7 +21,7 @@ This document summarizes what we learned and the concrete steps for publishing A
 ## 4) Required privacy URL
 - Because the app uses **CAMERA**, a privacy policy URL is required.
 - Current URL used in app + Play Console:
-  - `https://hawkfranklin.in/products/aura-privacy.html`
+  - `https://hawkfranklin.eu/products/aura-privacy.html`
 
 ## 5) Data Safety declaration
 - If all inference is on-device and no data is transmitted off-device, declare:

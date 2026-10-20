@@ -109,9 +109,12 @@ fun SettingsDialog(
   var isFocused by remember { mutableStateOf(false) }
   val focusRequester = remember { FocusRequester() }
   val interactionSource = remember { MutableInteractionSource() }
+  var showOpenRouter by remember { mutableStateOf(false) }
   var showTos by remember { mutableStateOf(false) }
   var showExitConfirm by remember { mutableStateOf(false) }
   val context = LocalContext.current
+
+  if (showOpenRouter) com.hawkfranklin.aura.ui.openrouter.OpenRouterConnectSheet(onDismiss = { showOpenRouter = false })
 
   Dialog(onDismissRequest = onDismissed) {
     val focusManager = LocalFocusManager.current
@@ -149,6 +152,7 @@ fun SettingsDialog(
           modifier = Modifier.verticalScroll(rememberScrollState()).weight(1f, fill = false),
           verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+          TextButton(onClick = { showOpenRouter = true }) { Text("OpenRouter connection and online privacy") }
           // About.
           Column(
             modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {},
@@ -163,7 +167,7 @@ fun SettingsDialog(
               style = MaterialTheme.typography.bodyMedium,
             )
             Text(
-              "AURA runs open-source AI models directly on your phone. Download a model once, then chat, ask, and test prompts even when the internet is unavailable.",
+              "AURA runs downloaded models on your phone. Optional OpenRouter chats use your own account and send online conversation context to third-party services.",
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -189,11 +193,11 @@ fun SettingsDialog(
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             ClickableLink(
-              url = "https://hawkfranklin.in/products/aura-privacy.html",
+              url = "https://hawkfranklin.eu/products/aura-privacy.html",
               linkText = "View privacy policy",
             )
             ClickableLink(
-              url = "https://hawkfranklin.in/products/aura2.html",
+              url = "https://hawkfranklin.eu/products/aura2.html",
               linkText = "Product page",
             )
           }

@@ -20,7 +20,7 @@
   <string name="app_name_first_part" translatable="false">AURA</string>
   <string name="app_name_second_part" translatable="false">PRIVATE LOCAL AI</string>
   <string name="app_tagline" translatable="false">The AI that doesn\'t need the internet.</string>
-  <string name="app_intro" translatable="false">Your private AI. On or offline.</string>
+  <string name="app_intro" translatable="false">On-device AI, with optional online chat.</string>
   <string name="best_overall" translatable="false">Best overall</string>
   <plurals name="model_list_number_of_models_available" translatable="false">
     <item quantity="one">%d model available</item>
@@ -79,7 +79,7 @@
   <string name="tos_dialog_page_1_title" translatable="false">AI that lives on your phone</string>
   <string name="tos_dialog_page_1_body" translatable="false">Download a model once, then use it anywhere, even in airplane mode.</string>
   <string name="tos_dialog_page_2_title" translatable="false">Private by design</string>
-  <string name="tos_dialog_page_2_body" translatable="false">Your chats run on this device after a model is downloaded. No account is needed to start.</string>
+  <string name="tos_dialog_page_2_body" translatable="false">Downloaded models run on this device without an account. Optional OpenRouter chats require a connection to your own OpenRouter account and send online messages and conversation context to third-party services. You can review online privacy information before connecting.</string>
   <string name="try_it" translatable="false">Try it</string>
   <string name="run_again" translatable="false">Run again</string>
   <string name="benchmark" translatable="false">Test speed on my phone</string>
@@ -108,7 +108,7 @@
   <string name="recents" translatable="false">Recents</string>
   <string name="clear_all" translatable="false">Clear all</string>
   <string name="chat_history_empty" translatable="false">Your saved chats will appear here.</string>
-  <string name="chat_history_local_notice" translatable="false">Saved on this device.</string>
+  <string name="chat_history_local_notice" translatable="false">Saved on this device. Deleting a chat removes the local copy.</string>
   <string name="clear_history_dialog_title" translatable="false">Clear history?</string>
   <string name="clear_history_dialog_content" translatable="false">This will delete all saved chats on this device.</string>
   <string name="delete_chat_dialog_title" translatable="false">Delete chat?</string>

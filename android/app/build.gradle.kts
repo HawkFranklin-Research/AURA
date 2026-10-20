@@ -48,13 +48,16 @@ android {
     applicationId = "com.hawkfranklin.aura"
     minSdk = 31
     targetSdk = 36
-    versionCode = 24
-    versionName = "1.0.6"
+    versionCode = 25
+    versionName = "1.0.7"
+    buildConfigField("String", "OPENROUTER_CALLBACK_PATH", "\"/aura/openrouter/callback\"")
+    manifestPlaceholders["openRouterCallbackPath"] = "/aura/openrouter/callback"
 
     // Needed for HuggingFace auth workflows.
     // Use the scheme of the "Redirect URLs" in HuggingFace app.
     manifestPlaceholders["appAuthRedirectScheme"] =
         "REPLACE_WITH_YOUR_REDIRECT_SCHEME_IN_HUGGINGFACE_APP"
+    manifestPlaceholders["appLabel"] = "@string/app_name"
     manifestPlaceholders["applicationName"] = "com.hawkfranklin.aura.GalleryApplication"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -72,6 +75,13 @@ android {
   }
 
   buildTypes {
+    debug {
+      applicationIdSuffix = ".debug"
+      buildConfigField("String", "OPENROUTER_CALLBACK_PATH", "\"/aura/openrouter/debug/callback\"")
+      manifestPlaceholders["openRouterCallbackPath"] = "/aura/openrouter/debug/callback"
+      versionNameSuffix = "-debug"
+      manifestPlaceholders["appLabel"] = "AURA Debug"
+    }
     release {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -95,6 +105,8 @@ android {
 }
 
 dependencies {
+  implementation("com.squareup.okhttp3:okhttp:4.12.0")
+  implementation("androidx.browser:browser:1.4.0")
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.activity.compose)

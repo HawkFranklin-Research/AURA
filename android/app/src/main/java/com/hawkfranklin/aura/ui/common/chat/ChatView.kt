@@ -96,6 +96,8 @@ fun ChatView(
   onRunAgainClicked: (Model, ChatMessage) -> Unit,
   navigateUp: () -> Unit,
   modifier: Modifier = Modifier,
+  onOpenModelPicker: (() -> Unit)? = null,
+  onOnlineSession: ((com.hawkfranklin.aura.proto.ChatSessionProto) -> Unit)? = null,
   onResetSessionClicked: (Model) -> Unit = {},
   onStreamImageMessage: (Model, ChatMessageImage) -> Unit = { _, _ -> },
   onStopButtonClicked: (Model) -> Unit = {},
@@ -171,8 +173,20 @@ fun ChatView(
             scope.launch { drawerState.close() }
             if (!uiState.inProgress) {
               val session = uiState.chatSessions.firstOrNull { it.sessionId == sessionId }
+              if (session?.providerId == "openrouter") {
+                onOnlineSession?.invoke(session)
+                return@ChatHistorySideSheetContent
+              }
               val sessionModel =
-                task.models.firstOrNull { it.name == session?.originalModel } ?: selectedModel
+                task.models.firstOrNull { it.name == session?.originalModel }
+              if (sessionModel == null) {
+                android.widget.Toast.makeText(context, "The original local model is unavailable.", android.widget.Toast.LENGTH_LONG).show()
+                return@ChatHistorySideSheetContent
+              }
+              // A restored transcript must not be appended to another session's runtime context.
+              com.hawkfranklin.aura.ui.llmchat.LlmChatModelHelper.resetConversation(
+                sessionModel, sessionModel.llmSupportImage, sessionModel.llmSupportAudio)
+
               if (sessionModel.name != selectedModel.name) {
                 modelManagerViewModel.selectModel(model = sessionModel)
               }
@@ -182,6 +196,8 @@ fun ChatView(
           onHistoryItemDeleted = { sessionId ->
             viewModel.deleteSession(context = context, sessionId = sessionId)
           },
+          onHistoryItemRenamed = viewModel::renameSession,
+          actionsEnabled = !uiState.inProgress && !uiState.preparing && !uiState.isResettingSession,
           onHistoryItemsDeleteAll = { viewModel.clearSessions(context = context) },
           onDismissed = { scope.launch { drawerState.close() } },
         )
@@ -193,6 +209,7 @@ fun ChatView(
       topBar = {
         ModelPageAppBar(
           task = task,
+          onOpenModelPicker = onOpenModelPicker,
           model = selectedModel,
           modelManagerViewModel = modelManagerViewModel,
           canShowResetSessionButton = true,

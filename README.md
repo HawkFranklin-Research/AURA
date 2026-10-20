@@ -1,13 +1,15 @@
 # AURA
 **Android Utility for Runtime AI**
 
-AURA is a native Android app for running open-source Small Language Models (SLMs) locally on your phone. It is built for private, on-device research and internal use. Once models are downloaded, inference runs fully offline and the app stays ad-free.
+AURA is a native Android app for running open-source Small Language Models (SLMs) locally on your phone. It is built for private, on-device research and internal use. Once models are downloaded, local inference runs offline. Optional OpenRouter text chat uses your own account and requires internet. The app stays ad-free.
 
 Developed by **HawkFranklin Research**.
 
 ## Highlights
 - **Pure local inference** using LiteRT-LM (no cloud required for chat).
 - **Model hub + downloads** from Hugging Face.
+- **Optional online chat** with OpenRouter Free Models Router and eligible individual `:free` chat models.
+- **Conversation tools**: search, rename, and Markdown export for saved chats; online context budgeting and continuation for output-limited replies.
 - **Core tasks**: Chat, Ask Image, and Prompt Lab.
 - **Open source & ad-free** by design.
 
@@ -26,7 +28,9 @@ AURA supports open-source SLMs such as:
 - **Processor**: Modern Snapdragon 8 Gen 1+ / Tensor G2 or newer recommended
 
 ## Privacy & Offline Use
-All inference runs on-device. Your prompts and data do not leave your phone. Internet is only needed to download models or access gated repositories, and after download the app works fully offline.
+Downloaded-model inference runs on-device. Optional online text chats send the current online conversation context directly to OpenRouter and an inference provider. AURA requests free-only routing with zero price ceilings; provider availability and data retention policies vary. Review [our privacy policy](PRIVACY_POLICY.md) and [OpenRouter's privacy policy](https://openrouter.ai/privacy) before connecting.
+
+Browser sign-in uses PKCE and encrypted Android Keystore-backed credential storage. A browser authorization-code fallback is included while the HTTPS callback is being configured. See [integration and deployment](docs/openrouter-integration.md) and [privacy/release checks](docs/openrouter-privacy-and-release.md).
 
 ## Roadmap
 - Chat with PDF & documents (RAG)

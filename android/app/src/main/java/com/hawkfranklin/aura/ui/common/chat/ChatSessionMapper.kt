@@ -60,6 +60,8 @@ fun buildChatSessionProto(
     .setTitle(messages.toSessionTitle())
     .setTimestampMs(System.currentTimeMillis())
     .setOriginalModel(model.name)
+    .setProviderId("local")
+    .setModelId(model.name)
     .setTaskId(task.id)
     .addAllMessages(protoMessages)
     .build()

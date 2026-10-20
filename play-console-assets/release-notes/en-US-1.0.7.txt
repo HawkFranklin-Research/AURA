@@ -1,0 +1,5 @@
+• Optional free online chat through your own OpenRouter account, alongside downloaded on-device models.
+• Stream replies, stop generation, retry requests, and restore saved online chats.
+• Search, rename, and export local and online conversations as Markdown.
+• Continue replies that reach an output limit, with clearer long-conversation handling.
+• Updated privacy information for online providers and chat exports.

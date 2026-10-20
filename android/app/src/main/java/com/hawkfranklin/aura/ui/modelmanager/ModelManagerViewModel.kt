@@ -955,7 +955,6 @@ constructor(
     }
 
     val textInputHistory = dataStoreRepository.readTextInputHistory()
-    Log.d(TAG, "text input history: $textInputHistory")
 
     Log.d(TAG, "model download status: $modelDownloadStatus")
     return ModelManagerUiState(

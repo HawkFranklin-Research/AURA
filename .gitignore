@@ -13,14 +13,7 @@ dist-ssr
 *.local
 
 # Android build artifacts and signing keys
-android/app/build/*
-!android/app/build/outputs/
-android/app/build/outputs/*
-!android/app/build/outputs/bundle/
-android/app/build/outputs/bundle/*
-!android/app/build/outputs/bundle/release/
-android/app/build/outputs/bundle/release/*
-!android/app/build/outputs/bundle/release/app-release.aab
+android/app/build/
 android/keystore
 android/keystore.properties
 *.keystore
